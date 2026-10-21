@@ -3,61 +3,119 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dashboard KPI - F4A Consultoria v9.0</title>
+  <title>Dashboard KPI - Linko Group / F4A Consultoria v9.0</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     body { background-color: #0f172a; color: #f8fafc; font-family: system-ui, -apple-system, sans-serif; }
     .card { background: #1e293b; border: 1px solid #334155; border-radius: 0.75rem; }
   </style>
 </head>
-<body class="min-h-screen p-6">
+<body class="min-h-screen p-4 md:p-6">
   <div class="max-w-7xl mx-auto space-y-6">
-    <!-- Header -->
-    <header class="flex flex-col md:flex-row md:items-center md:justify-between border-b border-slate-700 pb-4">
+    
+    <!-- Cabeçalho -->
+    <header class="flex flex-col md:flex-row md:items-center md:justify-between border-b border-slate-700 pb-4 gap-4">
       <div>
         <h1 class="text-2xl md:text-3xl font-bold text-white flex items-center gap-3">
           <i class="fa-solid fa-chart-line text-blue-500"></i> Dashboard KPI - Linko Group
         </h1>
-        <p class="text-slate-400 text-sm mt-1">F4A Consultoria LTDA • Versão 9.0 (Produção)</p>
+        <p class="text-slate-400 text-sm mt-1">F4A Consultoria LTDA • Versão 9.0 (Painel Operacional)</p>
       </div>
-      <div class="mt-4 md:mt-0 flex items-center gap-3">
+      <div class="flex items-center gap-3">
         <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
           <span class="w-2 h-2 rounded-full bg-emerald-400 mr-2 animate-pulse"></span> Sistema Ativo
         </span>
       </div>
     </header>
 
-    <!-- Indicadores Principais -->
-    <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <!-- Indicadores Principais (KPIs) -->
+    <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
       <div class="card p-5">
         <p class="text-sm font-medium text-slate-400">Regional Sul</p>
-        <p class="text-2xl font-bold text-white mt-2">PR / SC / RS</p>
+        <p class="text-2xl font-bold text-white mt-1">PR / SC / RS</p>
         <p class="text-xs text-blue-400 mt-2"><i class="fa-solid fa-location-dot"></i> Operação Teleco</p>
       </div>
       <div class="card p-5">
-        <p class="text-sm font-medium text-slate-400">Versão</p>
-        <p class="text-2xl font-bold text-emerald-400 mt-2">v9.0 Final</p>
-        <p class="text-xs text-emerald-400 mt-2"><i class="fa-solid fa-circle-check"></i> Sincronizado</p>
+        <p class="text-sm font-medium text-slate-400">Meta Operacional</p>
+        <p class="text-2xl font-bold text-emerald-400 mt-1">94.8%</p>
+        <p class="text-xs text-emerald-400 mt-2"><i class="fa-solid fa-arrow-up"></i> +2.3% este mês</p>
       </div>
       <div class="card p-5">
-        <p class="text-sm font-medium text-slate-400">Domínio Ativo</p>
-        <p class="text-lg font-bold text-slate-200 mt-2 truncate">kpi.f4aconsultoria.com.br</p>
-        <p class="text-xs text-slate-400 mt-2"><i class="fa-solid fa-globe"></i> Produção Vercel/GitHub</p>
+        <p class="text-sm font-medium text-slate-400">Parceiros Ativos</p>
+        <p class="text-2xl font-bold text-amber-400 mt-1">42 credenciados</p>
+        <p class="text-xs text-amber-400 mt-2"><i class="fa-solid fa-handshake"></i> Infraestrutura & Fibra</p>
+      </div>
+      <div class="card p-5">
+        <p class="text-sm font-medium text-slate-400">Status da Versão</p>
+        <p class="text-2xl font-bold text-purple-400 mt-1">v9.0 Final</p>
+        <p class="text-xs text-purple-400 mt-2"><i class="fa-solid fa-circle-check"></i> Produção Vercel</p>
       </div>
     </section>
 
-    <!-- Área Principal do Painel -->
-    <main class="card p-6">
-      <h2 class="text-xl font-bold text-white mb-4 flex items-center gap-2">
-        <i class="fa-solid fa-gauge-high text-blue-400"></i> Visão Geral dos Indicadores
-      </h2>
-      <p class="text-slate-300 mb-6">Painel de gerenciamento de infraestrutura e performance operacional.</p>
-
-      <div class="bg-slate-900/50 rounded-lg p-4 border border-slate-800 text-center text-slate-400 text-sm">
-        <p>Aguardando integração de dados dinâmicos da API / Planilhas.</p>
+    <!-- Gráficos e Tabelas -->
+    <section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      
+      <!-- Gráfico de Performance -->
+      <div class="card p-5 lg:col-span-2 space-y-4">
+        <h2 class="text-lg font-bold text-white flex items-center gap-2">
+          <i class="fa-solid fa-chart-area text-blue-400"></i> Desempenho Regional por Estado
+        </h2>
+        <div class="h-64 relative">
+          <canvas id="kpiChart"></canvas>
+        </div>
       </div>
-    </main>
+
+      <!-- Resumo de Operações por Estado -->
+      <div class="card p-5 space-y-4">
+        <h2 class="text-lg font-bold text-white flex items-center gap-2">
+          <i class="fa-solid fa-list-check text-emerald-400"></i> Resumo por Estado
+        </h2>
+        <div class="space-y-3 text-sm">
+          <div class="flex justify-between items-center p-2 rounded bg-slate-800/60">
+            <span class="font-medium">Paraná (PR)</span>
+            <span class="px-2 py-0.5 rounded text-xs bg-emerald-500/20 text-emerald-300 font-bold">96% SLA</span>
+          </div>
+          <div class="flex justify-between items-center p-2 rounded bg-slate-800/60">
+            <span class="font-medium">Santa Catarina (SC)</span>
+            <span class="px-2 py-0.5 rounded text-xs bg-blue-500/20 text-blue-300 font-bold">93% SLA</span>
+          </div>
+          <div class="flex justify-between items-center p-2 rounded bg-slate-800/60">
+            <span class="font-medium">Rio Grande do Sul (RS)</span>
+            <span class="px-2 py-0.5 rounded text-xs bg-amber-500/20 text-amber-300 font-bold">91% SLA</span>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
   </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const ctx = document.getElementById('kpiChart').getContext('2d');
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho'],
+          datasets: [
+            { label: 'PR', data: [88, 91, 93, 95, 94, 96], backgroundColor: '#3b82f6' },
+            { label: 'SC', data: [85, 87, 89, 92, 91, 93], backgroundColor: '#10b981' },
+            { label: 'RS', data: [82, 85, 88, 90, 89, 91], backgroundColor: '#f59e0b' }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { labels: { color: '#94a3b8' } } },
+          scales: {
+            x: { ticks: { color: '#94a3b8' }, grid: { color: '#334155' } },
+            y: { ticks: { color: '#94a3b8' }, grid: { color: '#334155' }, min: 50, max: 100 }
+          }
+        }
+      });
+    });
+  </script>
 </body>
 </html>
