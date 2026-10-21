@@ -1,71 +1,90 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" class="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dashboard KPI - Linko Group / F4A Consultoria v9.0</title>
+  <title>KPI F4A — Linko Group | Inteligência Executiva Regional Sul v9.0</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: { bg: '#071523', surface: '#102337', surface2: '#142a40', border: '#2a4358', cyan: '#42c8ef', blue: '#3c8df2', green: '#40cba3', amber: '#f4bd65', red: '#fa8394' }
+          }
+        }
+      }
+    }
+  </script>
   <style>
-    body { background-color: #0f172a; color: #f8fafc; font-family: system-ui, -apple-system, sans-serif; }
-    .card { background: #1e293b; border: 1px solid #334155; border-radius: 0.75rem; }
-    .badge-pr { background-color: rgba(59, 130, 246, 0.2); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.3); }
-    .badge-sc { background-color: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
-    .badge-rs { background-color: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
+    body { background-color: #071523; color: #e8f4fc; font-family: system-ui, -apple-system, sans-serif; }
+    .card { background: linear-gradient(150deg, #10273d, #102134); border: 1px solid #2a4358; border-radius: 0.75rem; box-shadow: 0 13px 40px rgba(0,0,0,.17); }
+    .badge-pr { background-color: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.3); }
+    .badge-sc { background-color: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
+    .badge-rs { background-color: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
   </style>
 </head>
 <body class="min-h-screen p-4 md:p-6 space-y-6">
   <div class="max-w-7xl mx-auto space-y-6">
     
-    <!-- Header Principal -->
+    <!-- Cabeçalho Oficial -->
     <header class="flex flex-col md:flex-row md:items-center md:justify-between border-b border-slate-700 pb-4 gap-4">
       <div>
-        <h1 class="text-2xl md:text-3xl font-bold text-white flex items-center gap-3">
-          <i class="fa-solid fa-shield-halved text-blue-500"></i> Dashboard KPI - Linko Group
+        <div class="text-xs text-cyan-400 font-bold uppercase tracking-wider mb-1">F4A Consultoria LTDA • Linko Group</div>
+        <h1 class="text-2xl md:text-3xl font-extrabold text-white flex items-center gap-3">
+          <i class="fa-solid fa-chart-line text-cyan-400"></i> Centro de Comando Executivo — Regional Sul
         </h1>
-        <p class="text-slate-400 text-sm mt-1">F4A Consultoria LTDA • Versão 9.0 (Produção Segura & Consolidada)</p>
+        <p class="text-slate-400 text-sm mt-1">Versão 9.0 (Produção Segura • Escopo Exclusivo: PR, SC, RS)[cite: 3]</p>
       </div>
-      <div class="flex items-center gap-3">
+      <div class="flex items-center gap-3 flex-wrap">
         <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-          <span class="w-2 h-2 rounded-full bg-emerald-400 mr-2 animate-pulse"></span> Sistema Ativo & Protegido
+          <span class="w-2 h-2 rounded-full bg-emerald-400 mr-2 animate-pulse"></span> Sistema Ativo (60s Sync)[cite: 3]
         </span>
-        <button onclick="resetData()" class="px-3 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded text-xs border border-slate-700 transition">
-          <i class="fa-solid fa-rotate-right mr-1"></i> Restaurar Visão
-        </button>
+        <div class="flex items-center gap-2 bg-slate-900 border border-slate-700 px-3 py-1.5 rounded-lg text-xs">
+          <label class="text-slate-400 font-medium"><i class="fa-solid fa-shield-halved mr-1"></i> Perfil:</label>
+          <select id="userRole" onchange="changeRole()" class="bg-slate-800 text-white rounded px-2 py-1 outline-none border border-slate-600 font-semibold">
+            <option value="admin">Administrador</option>
+            <option value="diretoria">Diretoria</option>
+            <option value="gestor" selected>Gestor Regional</option>
+            <option value="supervisorPR">Supervisor — PR</option>
+            <option value="supervisorSC">Supervisor — SC</option>
+            <option value="supervisorRS">Supervisor — RS</option>
+          </select>
+        </div>
       </div>
     </header>
 
-    <!-- Painel de Controlo e Filtros Dinâmicos -->
-    <section class="card p-5">
-      <div class="flex items-center justify-between mb-4 border-b border-slate-700/60 pb-2">
+    <!-- Filtros Territoriais e Operacionais -->
+    <section class="card p-5 space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-700/60 pb-2">
         <h3 class="text-sm font-semibold text-slate-300 uppercase tracking-wider flex items-center gap-2">
-          <i class="fa-solid fa-filter text-blue-400"></i> Filtros de Operação & Segurança
+          <i class="fa-solid fa-filter text-cyan-400"></i> Filtros de Escopo e Competência
         </h3>
-        <span id="filteredCount" class="text-xs text-slate-400">A carregar registros...</span>
+        <span id="filteredCount" class="text-xs text-slate-400">Carregando indicadores...</span>
       </div>
       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
         <div>
           <label class="block text-xs text-slate-400 mb-1 font-medium">Estado / Regional</label>
-          <select id="filterState" onchange="applyFilters()" class="w-full bg-slate-900 border border-slate-700 text-white rounded p-2 text-sm focus:outline-none focus:border-blue-500">
-            <option value="ALL">Todos os Estados (PR, SC, RS)</option>
+          <select id="filterState" onchange="applyFilters()" class="w-full bg-slate-900 border border-slate-700 text-white rounded p-2 text-sm focus:outline-none focus:border-cyan-400">
+            <option value="ALL">Consolidado Sul (PR, SC, RS)[cite: 3]</option>
             <option value="PR">Paraná (PR)</option>
             <option value="SC">Santa Catarina (SC)</option>
             <option value="RS">Rio Grande do Sul (RS)</option>
           </select>
         </div>
         <div>
-          <label class="block text-xs text-slate-400 mb-1 font-medium">Tipo de Serviço</label>
-          <select id="filterService" onchange="applyFilters()" class="w-full bg-slate-900 border border-slate-700 text-white rounded p-2 text-sm focus:outline-none focus:border-blue-500">
-            <option value="ALL">Todos os Serviços</option>
-            <option value="FTTH">Fibra Óptica / FTTH</option>
-            <option value="INFRA">Infraestrutura Passiva</option>
-            <option value="MANUT">Manutenção de Rede</option>
+          <label class="block text-xs text-slate-400 mb-1 font-medium">Competência</label>
+          <select id="filterCompetencia" class="w-full bg-slate-900 border border-slate-700 text-white rounded p-2 text-sm focus:outline-none focus:border-cyan-400">
+            <option value="2026-10">Outubro / 2026</option>
+            <option value="2026-09">Setembro / 2026</option>
           </select>
         </div>
         <div>
           <label class="block text-xs text-slate-400 mb-1 font-medium">Status de Credenciamento</label>
-          <select id="filterStatus" onchange="applyFilters()" class="w-full bg-slate-900 border border-slate-700 text-white rounded p-2 text-sm focus:outline-none focus:border-blue-500">
+          <select id="filterStatus" onchange="applyFilters()" class="w-full bg-slate-900 border border-slate-700 text-white rounded p-2 text-sm focus:outline-none focus:border-cyan-400">
             <option value="ALL">Todos os Status</option>
             <option value="Homologado">Homologado</option>
             <option value="Em Homologação">Em Homologação</option>
@@ -73,70 +92,47 @@
           </select>
         </div>
         <div>
-          <label class="block text-xs text-slate-400 mb-1 font-medium">Busca Segura (Parceiro / Cidade)</label>
+          <label class="block text-xs text-slate-400 mb-1 font-medium">Busca por Parceiro / Cidade</label>
           <div class="relative">
-            <input type="text" id="searchInput" onkeyup="applyFilters()" placeholder="Pesquisar..." class="w-full bg-slate-900 border border-slate-700 text-white rounded p-2 text-sm focus:outline-none focus:border-blue-500 pl-8">
+            <input type="text" id="searchInput" onkeyup="applyFilters()" placeholder="Nome ou cidade..." class="w-full bg-slate-900 border border-slate-700 text-white rounded p-2 text-sm focus:outline-none focus:border-cyan-400 pl-8">
             <i class="fa-solid fa-magnifying-glass absolute left-2.5 top-3 text-slate-500 text-xs"></i>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Indicadores Principais (KPIs Consolidados) -->
+    <!-- KPIs Oficiais Consolidados -->
     <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
       <div class="card p-5">
-        <div class="flex justify-between items-start">
-          <div>
-            <p class="text-sm font-medium text-slate-400">Total de OS Realizadas</p>
-            <p id="kpiTotalOS" class="text-2xl font-bold text-white mt-1">1,845 OS</p>
-          </div>
-          <div class="p-2 bg-blue-500/10 rounded-lg text-blue-400"><i class="fa-solid fa-list-check text-xl"></i></div>
-        </div>
-        <p class="text-xs text-blue-400 mt-3"><i class="fa-solid fa-chart-line mr-1"></i> Regional Sul Integrada</p>
+        <p class="text-sm font-medium text-slate-400">Produção Concluída vs Meta</p>
+        <p id="kpiProdMeta" class="text-2xl font-bold text-white mt-1">1,240 / 1,450</p>
+        <p id="kpiPercentual" class="text-xs text-cyan-400 mt-2"><i class="fa-solid fa-arrow-up"></i> 85.5% atingido no mês</p>
       </div>
-
       <div class="card p-5">
-        <div class="flex justify-between items-start">
-          <div>
-            <p class="text-sm font-medium text-slate-400">SLA Médio de Atendimento</p>
-            <p id="kpiSLA" class="text-2xl font-bold text-emerald-400 mt-1">95.4%</p>
-          </div>
-          <div class="p-2 bg-emerald-500/10 rounded-lg text-emerald-400"><i class="fa-solid fa-clock text-xl"></i></div>
-        </div>
-        <p class="text-xs text-emerald-400 mt-3"><i class="fa-solid fa-circle-check mr-1"></i> Meta >= 92% Cumprida</p>
+        <p class="text-sm font-medium text-slate-400">Receita Potencial Estimada</p>
+        <p id="kpiReceita" class="text-2xl font-bold text-emerald-400 mt-1">R$ 2.232.000</p>
+        <p class="text-xs text-emerald-400 mt-2"><i class="fa-solid fa-coins"></i> Base: R$ 1.800 / unidade[cite: 3]</p>
       </div>
-
       <div class="card p-5">
-        <div class="flex justify-between items-start">
-          <div>
-            <p class="text-sm font-medium text-slate-400">Parceiros Credenciados</p>
-            <p id="kpiParceiros" class="text-2xl font-bold text-amber-400 mt-1">48 Empresas</p>
-          </div>
-          <div class="p-2 bg-amber-500/10 rounded-lg text-amber-400"><i class="fa-solid fa-handshake text-xl"></i></div>
-        </div>
-        <p id="kpiDistribuicaoParceiros" class="text-xs text-amber-400 mt-3">PR: 20 | SC: 16 | RS: 12</p>
+        <p class="text-sm font-medium text-slate-400">Resultado Simplificado</p>
+        <p id="kpiResultado" class="text-2xl font-bold text-amber-400 mt-1">R$ 1.052.000</p>
+        <p id="kpiFixoInfo" class="text-xs text-amber-400 mt-2"><i class="fa-solid fa-scale-balanced"></i> Fixo deduzido: R$ 60.000 (3 UFs)[cite: 3]</p>
       </div>
-
       <div class="card p-5">
-        <div class="flex justify-between items-start">
-          <div>
-            <p class="text-sm font-medium text-slate-400">Capacidade Operacional</p>
-            <p id="kpiEquipes" class="text-2xl font-bold text-purple-400 mt-1">142 Equipes</p>
-          </div>
-          <div class="p-2 bg-purple-500/10 rounded-lg text-purple-400"><i class="fa-solid fa-users-gear text-xl"></i></div>
-        </div>
-        <p class="text-xs text-purple-400 mt-3"><i class="fa-solid fa-truck-fast mr-1"></i> Cobertura Ativa em Campo</p>
+        <p class="text-sm font-medium text-slate-400">Backlog e Capacidade</p>
+        <p id="kpiBacklog" class="text-2xl font-bold text-purple-400 mt-1">342 Blocos</p>
+        <p class="text-xs text-purple-400 mt-2"><i class="fa-solid fa-users-gear"></i> 142 Equipes ativas em campo[cite: 3]</p>
       </div>
     </section>
 
-    <!-- Área de Gráficos Operacionais -->
+    <!-- Gráficos de Desempenho -->
     <section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
       <div class="card p-5 lg:col-span-2 space-y-4">
         <div class="flex items-center justify-between border-b border-slate-700/60 pb-3">
           <h2 class="text-base font-bold text-white flex items-center gap-2">
-            <i class="fa-solid fa-chart-column text-blue-400"></i> Histórico de Desempenho SLA (%) por Estado
+            <i class="fa-solid fa-chart-area text-cyan-400"></i> Trajetória de Produção x Meta (Dias Úteis)[cite: 3]
           </h2>
-          <span class="text-xs text-slate-400">Últimos Semestres</span>
+          <span class="text-xs text-slate-400">Regional Sul consolidada</span>
         </div>
         <div class="h-64 relative">
           <canvas id="slaChart"></canvas>
@@ -146,9 +142,9 @@
       <div class="card p-5 space-y-4">
         <div class="flex items-center justify-between border-b border-slate-700/60 pb-3">
           <h2 class="text-base font-bold text-white flex items-center gap-2">
-            <i class="fa-solid fa-chart-pie text-purple-400"></i> Volume Operacional
+            <i class="fa-solid fa-chart-pie text-purple-400"></i> Participação por UF
           </h2>
-          <span class="text-xs text-slate-400">Divisão Regional %</span>
+          <span class="text-xs text-slate-400">PR / SC / RS</span>
         </div>
         <div class="h-64 relative flex items-center justify-center">
           <canvas id="distChart"></canvas>
@@ -156,16 +152,16 @@
       </div>
     </section>
 
-    <!-- Tabela Completa de Gestão de Parceiros & Credenciados -->
+    <!-- Matriz de Parceiros e Credenciados (Regional Sul) -->
     <section class="card p-5 space-y-4">
       <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-700 pb-3">
         <div>
           <h2 class="text-lg font-bold text-white flex items-center gap-2">
-            <i class="fa-solid fa-network-wired text-emerald-400"></i> Matriz de Credenciados - Regional Sul
+            <i class="fa-solid fa-network-wired text-emerald-400"></i> Matriz de Credenciados — Regional Sul
           </h2>
-          <p class="text-xs text-slate-400 mt-0.5">Gestão de capacidade técnica e homologação nos estados PR, SC e RS</p>
+          <p class="text-xs text-slate-400 mt-0.5">Controle de capacidade, equipes e SLA nos estados do Paraná, Santa Catarina e Rio Grande do Sul[cite: 3]</p>
         </div>
-        <div class="flex items-center gap-2">
+        <div>
           <button onclick="exportCSV()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded text-xs border border-slate-700 transition flex items-center gap-1.5">
             <i class="fa-solid fa-file-csv text-emerald-400"></i> Exportar Dados (CSV)
           </button>
@@ -179,14 +175,14 @@
               <th class="py-3 px-4">Parceiro / Credenciado</th>
               <th class="py-3 px-4">UF</th>
               <th class="py-3 px-4">Cidades Atendidas</th>
-              <th class="py-3 px-4">Especialidade</th>
-              <th class="py-3 px-4">Capacidade (Equipes)</th>
+              <th class="py-3 px-4">Serviço</th>
+              <th class="py-3 px-4">Equipes</th>
               <th class="py-3 px-4">SLA Operacional</th>
               <th class="py-3 px-4">Status</th>
             </tr>
           </thead>
           <tbody id="partnersTableBody" class="divide-y divide-slate-800">
-            <!-- Renderizado via JavaScript Seguro -->
+            <!-- Preenchido dinamicamente com segurança -->
           </tbody>
         </table>
       </div>
@@ -195,49 +191,106 @@
   </div>
 
   <script>
-    // Base de Dados Robusta e Protegida da Versão 9.0
+    // Base de dados rigorosa baseada na Versão 9.0 Oficial
     const partnersData = [
-      { name: "Teleinfra Sul Telecom LTDA", state: "PR", cities: "Curitiba, São José dos Pinhais, Araucária", service: "FTTH", teams: 28, sla: 96.8, status: "Homologado" },
-      { name: "Litoral Fibra & Engenharia", state: "SC", cities: "Florianópolis, Joinville, Blumenau", service: "FTTH", teams: 22, sla: 95.2, status: "Homologado" },
-      { name: "Gaúcha Redes & Infraestrutura", state: "RS", cities: "Porto Alegre, Caxias do Sul, Canoas", service: "INFRA", teams: 18, sla: 93.5, status: "Homologado" },
-      { name: "Paraná Conectividade e Serviços", state: "PR", cities: "Ponta Grossa, Cascavel, Toledo", service: "FTTH", teams: 16, sla: 94.1, status: "Homologado" },
-      { name: "Vale do Itajaí Telecom", state: "SC", cities: "Itajaí, Balneário Camboriú, Brusque", service: "MANUT", teams: 12, sla: 92.8, status: "Homologado" },
-      { name: "Sulmídia Engenharia de Campo", state: "RS", cities: "Pelotas, Rio Grande, Santa Maria", service: "INFRA", teams: 14, sla: 91.0, status: "Em Homologação" },
-      { name: "Norte Paranaense Fibra", state: "PR", cities: "Londrina, Maringá, Apucarana", service: "FTTH", teams: 20, sla: 97.4, status: "Homologado" },
-      { name: "Serra Gaúcha Telecomunicacoes", state: "RS", cities: "Bento Gonçalves, Farroupilha", service: "FTTH", teams: 8, sla: 89.5, status: "Em Prospecção" },
-      { name: "Oeste Catarinense Infra", state: "SC", cities: "Chapecó, Concórdia, Erechim", service: "INFRA", teams: 10, sla: 94.0, status: "Homologado" }
+      { name: "Teleinfra Sul Telecom LTDA", state: "PR", cities: "Curitiba, São José dos Pinhais, Araucária", service: "FTTH", teams: 28, sla: 96.8, status: "Homologado", goal: 550, done: 490 },
+      { name: "Litoral Fibra & Engenharia", state: "SC", cities: "Florianópolis, Joinville, Blumenau", service: "FTTH", teams: 22, sla: 95.2, status: "Homologado", goal: 480, done: 410 },
+      { name: "Gaúcha Redes & Infraestrutura", state: "RS", cities: "Porto Alegre, Caxias do Sul, Canoas", service: "INFRA", teams: 18, sla: 93.5, status: "Homologado", goal: 420, done: 340 },
+      { name: "Paraná Conectividade e Serviços", state: "PR", cities: "Ponta Grossa, Cascavel, Toledo", service: "FTTH", teams: 16, sla: 94.1, status: "Homologado", goal: 300, done: 280 },
+      { name: "Vale do Itajaí Telecom", state: "SC", cities: "Itajaí, Balneário Camboriú, Brusque", service: "MANUT", teams: 12, sla: 92.8, status: "Homologado", goal: 250, done: 220 },
+      { name: "Sulmídia Engenharia de Campo", state: "RS", cities: "Pelotas, Rio Grande, Santa Maria", service: "INFRA", teams: 14, sla: 91.0, status: "Em Homologação", goal: 200, done: 150 }
     ];
 
     let slaChartInstance = null;
     let distChartInstance = null;
 
     document.addEventListener("DOMContentLoaded", function() {
-      try {
-        renderTable(partnersData);
-        renderCharts();
-        updateKPIs(partnersData);
-        document.getElementById("filteredCount").innerText = `Exibindo ${partnersData.length} de ${partnersData.length} registros`;
-      } catch (error) {
-        console.error("Erro crítico na inicialização do painel:", error);
-      }
+      applyRolePermissions();
+      applyFilters();
+      renderCharts();
     });
 
-    // Função de Sanitização e Renderização Segura
+    function changeRole() {
+      applyRolePermissions();
+      applyFilters();
+    }
+
+    function applyRolePermissions() {
+      const role = document.getElementById("userRole").value;
+      const stateSelect = document.getElementById("filterState");
+      
+      if (role.startsWith("supervisor")) {
+        const uf = role.replace("supervisor", "");
+        stateSelect.value = uf;
+        stateSelect.disabled = true;
+      } else {
+        stateSelect.disabled = false;
+      }
+    }
+
+    function escapeHtml(str) {
+      return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+    }
+
+    function applyFilters() {
+      const role = document.getElementById("userRole").value;
+      let state = document.getElementById("filterState").value;
+      
+      if (role.startsWith("supervisor")) {
+        state = role.replace("supervisor", "");
+        document.getElementById("filterState").value = state;
+      }
+
+      const status = document.getElementById("filterStatus").value;
+      const search = document.getElementById("searchInput").value.toLowerCase().trim();
+
+      const filtered = partnersData.filter(item => {
+        const matchState = (state === "ALL" || item.state === state);
+        const matchStatus = (status === "ALL" || item.status === status);
+        const matchSearch = (item.name.toLowerCase().includes(search) || item.cities.toLowerCase().includes(search));
+        return matchState && matchStatus && matchSearch;
+      });
+
+      renderTable(filtered);
+      updateKPIs(filtered, state);
+    }
+
+    function updateKPIs(data, stateFilter) {
+      let totalDone = data.reduce((acc, curr) => acc + curr.done, 0);
+      let totalGoal = data.reduce((acc, curr) => acc + curr.goal, 0);
+      let activeUFs = stateFilter === "ALL" ? 3 : 1;
+      
+      // Premissas financeiras oficiais v9.0: Receita R$ 1.800/unid, Fixo R$ 20.000 por UF[cite: 3]
+      let receitaPotencial = totalDone * 1800;
+      let custoFixoTotal = activeUFs * 20000;
+      let custoDireto = totalDone * 900;
+      let resultadoOperacional = receitaPotencial - custoDireto - custoFixoTotal;
+
+      document.getElementById("kpiProdMeta").innerText = `${totalDone.toLocaleString()} / ${totalGoal.toLocaleString()} blocos`;
+      let pct = totalGoal > 0 ? ((totalDone / totalGoal) * 100).toFixed(1) : 0;
+      document.getElementById("kpiPercentual").innerHTML = `<i class="fa-solid fa-arrow-up"></i> ${pct}% atingido no mês`;
+      document.getElementById("kpiReceita").innerText = receitaPotencial.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 });
+      document.getElementById("kpiResultado").innerText = resultadoOperacional.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 });
+      document.getElementById("kpiFixoInfo").innerHTML = `<i class="fa-solid fa-scale-balanced"></i> Fixo deduzido: R$ ${custoFixoTotal.toLocaleString()} (${activeUFs} UF${activeUFs>1?'s':''})[cite: 3]`;
+      
+      let totalTeams = data.reduce((acc, curr) => acc + curr.teams, 0);
+      document.getElementById("kpiBacklog").innerText = `${totalTeams * 8} Blocos (Estoque)`;
+      document.getElementById("filteredCount").innerText = `Exibindo ${data.length} de ${partnersData.length} credenciados`;
+    }
+
     function renderTable(data) {
       const tbody = document.getElementById("partnersTableBody");
       tbody.innerHTML = "";
 
-      if(!data || data.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="7" class="py-6 text-center text-slate-500">Nenhum parceiro encontrado com os critérios selecionados.</td></tr>`;
+      if (!data || data.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" class="py-6 text-center text-slate-500">Nenhum parceiro encontrado para os filtros e permissões aplicados.</td></tr>`;
         return;
       }
 
       data.forEach(item => {
         const badgeClass = item.state === "PR" ? "badge-pr" : (item.state === "SC" ? "badge-sc" : "badge-rs");
-        const statusClass = item.status === "Homologado" ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30" : 
-                         (item.status === "Em Homologação" ? "bg-amber-500/20 text-amber-400 border border-amber-500/30" : "bg-slate-700/50 text-slate-400");
-        
-        const slaColor = item.sla >= 95 ? "text-emerald-400" : (item.sla >= 92 ? "text-blue-400" : "text-amber-400");
+        const statusClass = item.status === "Homologado" ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30" : "bg-amber-500/20 text-amber-400 border border-amber-500/30";
+        const slaColor = item.sla >= 95 ? "text-emerald-400" : "text-amber-400";
 
         const tr = document.createElement("tr");
         tr.className = "hover:bg-slate-800/50 transition";
@@ -246,64 +299,12 @@
           <td class="py-3 px-4"><span class="px-2 py-0.5 rounded text-xs font-bold ${badgeClass}">${escapeHtml(item.state)}</span></td>
           <td class="py-3 px-4 text-slate-400">${escapeHtml(item.cities)}</td>
           <td class="py-3 px-4"><span class="text-xs bg-slate-800 text-slate-300 border border-slate-700 px-2 py-0.5 rounded">${escapeHtml(item.service)}</span></td>
-          <td class="py-3 px-4 font-medium text-slate-200">${Number(item.teams)} equipes</td>
-          <td class="py-3 px-4 font-bold ${slaColor}">${Number(item.sla).toFixed(1)}%</td>
+          <td class="py-3 px-4 font-medium text-slate-200">${item.teams} equipes</td>
+          <td class="py-3 px-4 font-bold ${slaColor}">${item.sla.toFixed(1)}%</td>
           <td class="py-3 px-4"><span class="px-2.5 py-0.5 rounded-full text-xs font-semibold ${statusClass}">${escapeHtml(item.status)}</span></td>
         `;
         tbody.appendChild(tr);
       });
-    }
-
-    // Trava de segurança contra injeção de HTML
-    function escapeHtml(str) {
-      return String(str)
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
-    }
-
-    function applyFilters() {
-      const state = document.getElementById("filterState").value;
-      const service = document.getElementById("filterService").value;
-      const status = document.getElementById("filterStatus").value;
-      const search = document.getElementById("searchInput").value.toLowerCase().trim();
-
-      const filtered = partnersData.filter(item => {
-        const matchState = (state === "ALL" || item.state === state);
-        const matchService = (service === "ALL" || item.service === service);
-        const matchStatus = (status === "ALL" || item.status === status);
-        const matchSearch = (item.name.toLowerCase().includes(search) || item.cities.toLowerCase().includes(search));
-
-        return matchState && matchService && matchStatus && matchSearch;
-      });
-
-      renderTable(filtered);
-      updateKPIs(filtered);
-      document.getElementById("filteredCount").innerText = `Exibindo ${filtered.length} de ${partnersData.length} registros`;
-    }
-
-    function updateKPIs(data) {
-      if(!data || data.length === 0) {
-        document.getElementById("kpiParceiros").innerText = `0 Empresas`;
-        document.getElementById("kpiEquipes").innerText = `0 Equipes`;
-        document.getElementById("kpiSLA").innerText = `0.0%`;
-        document.getElementById("kpiDistribuicaoParceiros").innerText = `PR: 0 | SC: 0 | RS: 0`;
-        return;
-      }
-
-      const totalTeams = data.reduce((acc, curr) => acc + curr.teams, 0);
-      const avgSLA = (data.reduce((acc, curr) => acc + curr.sla, 0) / data.length).toFixed(1);
-      
-      const prCount = data.filter(i => i.state === "PR").length;
-      const scCount = data.filter(i => i.state === "SC").length;
-      const rsCount = data.filter(i => i.state === "RS").length;
-
-      document.getElementById("kpiParceiros").innerText = `${data.length} Empresas`;
-      document.getElementById("kpiEquipes").innerText = `${totalTeams} Equipes`;
-      document.getElementById("kpiSLA").innerText = `${avgSLA}%`;
-      document.getElementById("kpiDistribuicaoParceiros").innerText = `PR: ${prCount} | SC: ${scCount} | RS: ${rsCount}`;
     }
 
     function renderCharts() {
@@ -311,11 +312,11 @@
       slaChartInstance = new Chart(ctx1, {
         type: 'bar',
         data: {
-          labels: ['Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out'],
+          labels: ['Semana 1', 'Semana 2', 'Semana 3', 'Semana 4 (Projeção)'],
           datasets: [
-            { label: 'Paraná (PR)', data: [92.1, 93.5, 94.8, 95.5, 96.2, 96.8], backgroundColor: '#3b82f6' },
-            { label: 'Santa Catarina (SC)', data: [89.4, 91.0, 92.5, 93.8, 94.5, 95.2], backgroundColor: '#10b981' },
-            { label: 'Rio Grande do Sul (RS)', data: [87.0, 88.5, 90.2, 91.8, 92.4, 93.5], backgroundColor: '#f59e0b' }
+            { label: 'Paraná (PR)', data: [120, 260, 410, 770], backgroundColor: '#3b82f6' },
+            { label: 'Santa Catarina (SC)', data: [100, 220, 350, 630], backgroundColor: '#10b981' },
+            { label: 'Rio Grande do Sul (RS)', data: [80, 170, 290, 490], backgroundColor: '#f59e0b' }
           ]
         },
         options: {
@@ -323,8 +324,8 @@
           maintainAspectRatio: false,
           plugins: { legend: { labels: { color: '#94a3b8' } } },
           scales: {
-            x: { ticks: { color: '#94a3b8' }, grid: { color: '#334155' } },
-            y: { ticks: { color: '#94a3b8' }, grid: { color: '#334155' }, min: 50, max: 100 }
+            x: { ticks: { color: '#94a3b8' }, grid: { color: '#2a4358' } },
+            y: { ticks: { color: '#94a3b8' }, grid: { color: '#2a4358' } }
           }
         }
       });
@@ -333,9 +334,9 @@
       distChartInstance = new Chart(ctx2, {
         type: 'doughnut',
         data: {
-          labels: ['Paraná (42%)', 'Santa Catarina (34%)', 'Rio Grande do Sul (24%)'],
+          labels: ['Paraná (42%)', 'Santa Catarina (35%)', 'Rio Grande do Sul (23%)'],
           datasets: [{
-            data: [42, 34, 24],
+            data: [42, 35, 23],
             backgroundColor: ['#3b82f6', '#10b981', '#f59e0b'],
             borderWidth: 0
           }]
@@ -348,14 +349,6 @@
       });
     }
 
-    function resetData() {
-      document.getElementById("filterState").value = "ALL";
-      document.getElementById("filterService").value = "ALL";
-      document.getElementById("filterStatus").value = "ALL";
-      document.getElementById("searchInput").value = "";
-      applyFilters();
-    }
-
     function exportCSV() {
       let csv = "Parceiro;Estado;Cidades;Servico;Equipes;SLA;Status\n";
       partnersData.forEach(row => {
@@ -364,7 +357,7 @@
       const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
       const link = document.createElement("a");
       link.href = URL.createObjectURL(blob);
-      link.setAttribute("download", "kpi_parceiros_regional_sul.csv");
+      link.setAttribute("download", "kpi_f4a_regional_sul.csv");
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
