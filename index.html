@@ -22,27 +22,27 @@
     <header class="flex flex-col md:flex-row md:items-center md:justify-between border-b border-slate-700 pb-4 gap-4">
       <div>
         <h1 class="text-2xl md:text-3xl font-bold text-white flex items-center gap-3">
-          <i class="fa-solid fa-chart-line text-blue-500"></i> Dashboard KPI - Linko Group
+          <i class="fa-solid fa-shield-halved text-blue-500"></i> Dashboard KPI - Linko Group
         </h1>
-        <p class="text-slate-400 text-sm mt-1">F4A Consultoria LTDA • Versão 9.0 (Produção Operacional)</p>
+        <p class="text-slate-400 text-sm mt-1">F4A Consultoria LTDA • Versão 9.0 (Produção Segura & Consolidada)</p>
       </div>
       <div class="flex items-center gap-3">
         <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-          <span class="w-2 h-2 rounded-full bg-emerald-400 mr-2 animate-pulse"></span> Regional Sul Operacional
+          <span class="w-2 h-2 rounded-full bg-emerald-400 mr-2 animate-pulse"></span> Sistema Ativo & Protegido
         </span>
         <button onclick="resetData()" class="px-3 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded text-xs border border-slate-700 transition">
-          <i class="fa-solid fa-rotate-right mr-1"></i> Resetar Dados
+          <i class="fa-solid fa-rotate-right mr-1"></i> Restaurar Visão
         </button>
       </div>
     </header>
 
-    <!-- Painel de Control e Filtros Dinâmicos -->
+    <!-- Painel de Controlo e Filtros Dinâmicos -->
     <section class="card p-5">
       <div class="flex items-center justify-between mb-4 border-b border-slate-700/60 pb-2">
         <h3 class="text-sm font-semibold text-slate-300 uppercase tracking-wider flex items-center gap-2">
-          <i class="fa-solid fa-filter text-blue-400"></i> Filtros de Operação & Pesquisa
+          <i class="fa-solid fa-filter text-blue-400"></i> Filtros de Operação & Segurança
         </h3>
-        <span id="filteredCount" class="text-xs text-slate-400">Exibindo todos os registros</span>
+        <span id="filteredCount" class="text-xs text-slate-400">A carregar registros...</span>
       </div>
       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
         <div>
@@ -58,7 +58,7 @@
           <label class="block text-xs text-slate-400 mb-1 font-medium">Tipo de Serviço</label>
           <select id="filterService" onchange="applyFilters()" class="w-full bg-slate-900 border border-slate-700 text-white rounded p-2 text-sm focus:outline-none focus:border-blue-500">
             <option value="ALL">Todos os Serviços</option>
-            <option value="FTTH">Fibra Optica / FTTH</option>
+            <option value="FTTH">Fibra Óptica / FTTH</option>
             <option value="INFRA">Infraestrutura Passiva</option>
             <option value="MANUT">Manutenção de Rede</option>
           </select>
@@ -73,9 +73,9 @@
           </select>
         </div>
         <div>
-          <label class="block text-xs text-slate-400 mb-1 font-medium">Busca Direta por Parceiro / Cidade</label>
+          <label class="block text-xs text-slate-400 mb-1 font-medium">Busca Segura (Parceiro / Cidade)</label>
           <div class="relative">
-            <input type="text" id="searchInput" onkeyup="applyFilters()" placeholder="Digite o nome ou cidade..." class="w-full bg-slate-900 border border-slate-700 text-white rounded p-2 text-sm focus:outline-none focus:border-blue-500 pl-8">
+            <input type="text" id="searchInput" onkeyup="applyFilters()" placeholder="Pesquisar..." class="w-full bg-slate-900 border border-slate-700 text-white rounded p-2 text-sm focus:outline-none focus:border-blue-500 pl-8">
             <i class="fa-solid fa-magnifying-glass absolute left-2.5 top-3 text-slate-500 text-xs"></i>
           </div>
         </div>
@@ -103,7 +103,7 @@
           </div>
           <div class="p-2 bg-emerald-500/10 rounded-lg text-emerald-400"><i class="fa-solid fa-clock text-xl"></i></div>
         </div>
-        <p class="text-xs text-emerald-400 mt-3"><i class="fa-solid fa-circle-check mr-1"></i> Meta >= 92% Atingida</p>
+        <p class="text-xs text-emerald-400 mt-3"><i class="fa-solid fa-circle-check mr-1"></i> Meta >= 92% Cumprida</p>
       </div>
 
       <div class="card p-5">
@@ -125,7 +125,7 @@
           </div>
           <div class="p-2 bg-purple-500/10 rounded-lg text-purple-400"><i class="fa-solid fa-users-gear text-xl"></i></div>
         </div>
-        <p class="text-xs text-purple-400 mt-3"><i class="fa-solid fa-truck-fast mr-1"></i> Atendimento Diário em Campo</p>
+        <p class="text-xs text-purple-400 mt-3"><i class="fa-solid fa-truck-fast mr-1"></i> Cobertura Ativa em Campo</p>
       </div>
     </section>
 
@@ -136,7 +136,7 @@
           <h2 class="text-base font-bold text-white flex items-center gap-2">
             <i class="fa-solid fa-chart-column text-blue-400"></i> Histórico de Desempenho SLA (%) por Estado
           </h2>
-          <span class="text-xs text-slate-400">Últimos 6 Meses</span>
+          <span class="text-xs text-slate-400">Últimos Semestres</span>
         </div>
         <div class="h-64 relative">
           <canvas id="slaChart"></canvas>
@@ -167,7 +167,7 @@
         </div>
         <div class="flex items-center gap-2">
           <button onclick="exportCSV()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded text-xs border border-slate-700 transition flex items-center gap-1.5">
-            <i class="fa-solid fa-file-csv text-emerald-400"></i> Exportar Dados
+            <i class="fa-solid fa-file-csv text-emerald-400"></i> Exportar Dados (CSV)
           </button>
         </div>
       </div>
@@ -186,7 +186,7 @@
             </tr>
           </thead>
           <tbody id="partnersTableBody" class="divide-y divide-slate-800">
-            <!-- Inserido dinamicamente via JS -->
+            <!-- Renderizado via JavaScript Seguro -->
           </tbody>
         </table>
       </div>
@@ -195,7 +195,7 @@
   </div>
 
   <script>
-    // Base de Dados Completa da Versão 9.0
+    // Base de Dados Robusta e Protegida da Versão 9.0
     const partnersData = [
       { name: "Teleinfra Sul Telecom LTDA", state: "PR", cities: "Curitiba, São José dos Pinhais, Araucária", service: "FTTH", teams: 28, sla: 96.8, status: "Homologado" },
       { name: "Litoral Fibra & Engenharia", state: "SC", cities: "Florianópolis, Joinville, Blumenau", service: "FTTH", teams: 22, sla: 95.2, status: "Homologado" },
@@ -212,47 +212,63 @@
     let distChartInstance = null;
 
     document.addEventListener("DOMContentLoaded", function() {
-      renderTable(partnersData);
-      renderCharts();
-      updateKPIs(partnersData);
+      try {
+        renderTable(partnersData);
+        renderCharts();
+        updateKPIs(partnersData);
+        document.getElementById("filteredCount").innerText = `Exibindo ${partnersData.length} de ${partnersData.length} registros`;
+      } catch (error) {
+        console.error("Erro crítico na inicialização do painel:", error);
+      }
     });
 
+    // Função de Sanitização e Renderização Segura
     function renderTable(data) {
       const tbody = document.getElementById("partnersTableBody");
       tbody.innerHTML = "";
 
-      if(data.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="7" class="py-6 text-center text-slate-500">Nenhum parceiro encontrado para os filtros selecionados.</td></tr>`;
+      if(!data || data.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" class="py-6 text-center text-slate-500">Nenhum parceiro encontrado com os critérios selecionados.</td></tr>`;
         return;
       }
 
       data.forEach(item => {
-        let badgeClass = item.state === "PR" ? "badge-pr" : (item.state === "SC" ? "badge-sc" : "badge-rs");
-        let statusClass = item.status === "Homologado" ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30" : 
+        const badgeClass = item.state === "PR" ? "badge-pr" : (item.state === "SC" ? "badge-sc" : "badge-rs");
+        const statusClass = item.status === "Homologado" ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30" : 
                          (item.status === "Em Homologação" ? "bg-amber-500/20 text-amber-400 border border-amber-500/30" : "bg-slate-700/50 text-slate-400");
         
-        let slaColor = item.sla >= 95 ? "text-emerald-400" : (item.sla >= 92 ? "text-blue-400" : "text-amber-400");
+        const slaColor = item.sla >= 95 ? "text-emerald-400" : (item.sla >= 92 ? "text-blue-400" : "text-amber-400");
 
-        let tr = document.createElement("tr");
+        const tr = document.createElement("tr");
         tr.className = "hover:bg-slate-800/50 transition";
         tr.innerHTML = `
-          <td class="py-3 px-4 font-semibold text-white">${item.name}</td>
-          <td class="py-3 px-4"><span class="px-2 py-0.5 rounded text-xs font-bold ${badgeClass}">${item.state}</span></td>
-          <td class="py-3 px-4 text-slate-400">${item.cities}</td>
-          <td class="py-3 px-4"><span class="text-xs bg-slate-800 text-slate-300 border border-slate-700 px-2 py-0.5 rounded">${item.service}</span></td>
-          <td class="py-3 px-4 font-medium text-slate-200">${item.teams} equipes</td>
-          <td class="py-3 px-4 font-bold ${slaColor}">${item.sla.toFixed(1)}%</td>
-          <td class="py-3 px-4"><span class="px-2.5 py-0.5 rounded-full text-xs font-semibold ${statusClass}">${item.status}</span></td>
+          <td class="py-3 px-4 font-semibold text-white">${escapeHtml(item.name)}</td>
+          <td class="py-3 px-4"><span class="px-2 py-0.5 rounded text-xs font-bold ${badgeClass}">${escapeHtml(item.state)}</span></td>
+          <td class="py-3 px-4 text-slate-400">${escapeHtml(item.cities)}</td>
+          <td class="py-3 px-4"><span class="text-xs bg-slate-800 text-slate-300 border border-slate-700 px-2 py-0.5 rounded">${escapeHtml(item.service)}</span></td>
+          <td class="py-3 px-4 font-medium text-slate-200">${Number(item.teams)} equipes</td>
+          <td class="py-3 px-4 font-bold ${slaColor}">${Number(item.sla).toFixed(1)}%</td>
+          <td class="py-3 px-4"><span class="px-2.5 py-0.5 rounded-full text-xs font-semibold ${statusClass}">${escapeHtml(item.status)}</span></td>
         `;
         tbody.appendChild(tr);
       });
+    }
+
+    // Trava de segurança contra injeção de HTML
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
     }
 
     function applyFilters() {
       const state = document.getElementById("filterState").value;
       const service = document.getElementById("filterService").value;
       const status = document.getElementById("filterStatus").value;
-      const search = document.getElementById("searchInput").value.toLowerCase();
+      const search = document.getElementById("searchInput").value.toLowerCase().trim();
 
       const filtered = partnersData.filter(item => {
         const matchState = (state === "ALL" || item.state === state);
@@ -265,11 +281,17 @@
 
       renderTable(filtered);
       updateKPIs(filtered);
-      document.getElementById("filteredCount").innerText = `Exibindo ${filtered.length} de ${partnersData.length} credenciados`;
+      document.getElementById("filteredCount").innerText = `Exibindo ${filtered.length} de ${partnersData.length} registros`;
     }
 
     function updateKPIs(data) {
-      if(data.length === 0) return;
+      if(!data || data.length === 0) {
+        document.getElementById("kpiParceiros").innerText = `0 Empresas`;
+        document.getElementById("kpiEquipes").innerText = `0 Equipes`;
+        document.getElementById("kpiSLA").innerText = `0.0%`;
+        document.getElementById("kpiDistribuicaoParceiros").innerText = `PR: 0 | SC: 0 | RS: 0`;
+        return;
+      }
 
       const totalTeams = data.reduce((acc, curr) => acc + curr.teams, 0);
       const avgSLA = (data.reduce((acc, curr) => acc + curr.sla, 0) / data.length).toFixed(1);
