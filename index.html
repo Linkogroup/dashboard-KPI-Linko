@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard KPI - F4A Consultoria v9.0</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    body { background-color: #0f172a; color: #f8fafc; font-family: system-ui, -apple-system, sans-serif; }
+    .card { background: #1e293b; border: 1px solid #334155; border-radius: 0.75rem; }
+  </style>
+</head>
+<body class="min-h-screen p-6">
+  <div class="max-w-7xl mx-auto space-y-6">
+    <!-- Header -->
+    <header class="flex flex-col md:flex-row md:items-center md:justify-between border-b border-slate-700 pb-4">
+      <div>
+        <h1 class="text-2xl md:text-3xl font-bold text-white flex items-center gap-3">
+          <i class="fa-solid fa-chart-line text-blue-500"></i> Dashboard KPI - Linko Group
+        </h1>
+        <p class="text-slate-400 text-sm mt-1">F4A Consultoria LTDA • Versão 9.0 (Produção)</p>
+      </div>
+      <div class="mt-4 md:mt-0 flex items-center gap-3">
+        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 mr-2 animate-pulse"></span> Sistema Ativo
+        </span>
+      </div>
+    </header>
+
+    <!-- Indicadores Principais -->
+    <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="card p-5">
+        <p class="text-sm font-medium text-slate-400">Regional Sul</p>
+        <p class="text-2xl font-bold text-white mt-2">PR / SC / RS</p>
+        <p class="text-xs text-blue-400 mt-2"><i class="fa-solid fa-location-dot"></i> Operação Teleco</p>
+      </div>
+      <div class="card p-5">
+        <p class="text-sm font-medium text-slate-400">Versão</p>
+        <p class="text-2xl font-bold text-emerald-400 mt-2">v9.0 Final</p>
+        <p class="text-xs text-emerald-400 mt-2"><i class="fa-solid fa-circle-check"></i> Sincronizado</p>
+      </div>
+      <div class="card p-5">
+        <p class="text-sm font-medium text-slate-400">Domínio Ativo</p>
+        <p class="text-lg font-bold text-slate-200 mt-2 truncate">kpi.f4aconsultoria.com.br</p>
+        <p class="text-xs text-slate-400 mt-2"><i class="fa-solid fa-globe"></i> Produção Vercel/GitHub</p>
+      </div>
+    </section>
+
+    <!-- Área Principal do Painel -->
+    <main class="card p-6">
+      <h2 class="text-xl font-bold text-white mb-4 flex items-center gap-2">
+        <i class="fa-solid fa-gauge-high text-blue-400"></i> Visão Geral dos Indicadores
+      </h2>
+      <p class="text-slate-300 mb-6">Painel de gerenciamento de infraestrutura e performance operacional.</p>
+
+      <div class="bg-slate-900/50 rounded-lg p-4 border border-slate-800 text-center text-slate-400 text-sm">
+        <p>Aguardando integração de dados dinâmicos da API / Planilhas.</p>
+      </div>
+    </main>
+  </div>
+</body>
+</html>
