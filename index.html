@@ -12,7 +12,7 @@
     .card { background: #1e293b; border: 1px solid #334155; border-radius: 0.75rem; }
   </style>
 </head>
-<body class="min-h-screen p-4 md:p-6">
+<body class="min-h-screen p-4 md:p-6 space-y-6">
   <div class="max-w-7xl mx-auto space-y-6">
     
     <!-- Cabeçalho -->
@@ -21,88 +21,162 @@
         <h1 class="text-2xl md:text-3xl font-bold text-white flex items-center gap-3">
           <i class="fa-solid fa-chart-line text-blue-500"></i> Dashboard KPI - Linko Group
         </h1>
-        <p class="text-slate-400 text-sm mt-1">F4A Consultoria LTDA • Versão 9.0 (Painel Operacional)</p>
+        <p class="text-slate-400 text-sm mt-1">F4A Consultoria LTDA • Versão 9.0 (Estrutura Operacional Completa)</p>
       </div>
       <div class="flex items-center gap-3">
         <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-          <span class="w-2 h-2 rounded-full bg-emerald-400 mr-2 animate-pulse"></span> Sistema Ativo
+          <span class="w-2 h-2 rounded-full bg-emerald-400 mr-2 animate-pulse"></span> Regional Sul Ativa
         </span>
       </div>
     </header>
 
-    <!-- Indicadores Principais (KPIs) -->
-    <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-      <div class="card p-5">
-        <p class="text-sm font-medium text-slate-400">Regional Sul</p>
-        <p class="text-2xl font-bold text-white mt-1">PR / SC / RS</p>
-        <p class="text-xs text-blue-400 mt-2"><i class="fa-solid fa-location-dot"></i> Operação Teleco</p>
-      </div>
-      <div class="card p-5">
-        <p class="text-sm font-medium text-slate-400">Meta Operacional</p>
-        <p class="text-2xl font-bold text-emerald-400 mt-1">94.8%</p>
-        <p class="text-xs text-emerald-400 mt-2"><i class="fa-solid fa-arrow-up"></i> +2.3% este mês</p>
-      </div>
-      <div class="card p-5">
-        <p class="text-sm font-medium text-slate-400">Parceiros Ativos</p>
-        <p class="text-2xl font-bold text-amber-400 mt-1">42 credenciados</p>
-        <p class="text-xs text-amber-400 mt-2"><i class="fa-solid fa-handshake"></i> Infraestrutura & Fibra</p>
-      </div>
-      <div class="card p-5">
-        <p class="text-sm font-medium text-slate-400">Status da Versão</p>
-        <p class="text-2xl font-bold text-purple-400 mt-1">v9.0 Final</p>
-        <p class="text-xs text-purple-400 mt-2"><i class="fa-solid fa-circle-check"></i> Produção Vercel</p>
+    <!-- Filtros Operacionais -->
+    <section class="card p-4">
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+        <div>
+          <label class="block text-xs text-slate-400 mb-1 font-medium">Estado / Regional</label>
+          <select id="filterState" class="w-full bg-slate-900 border border-slate-700 text-white rounded p-2 text-sm focus:outline-none focus:border-blue-500">
+            <option value="ALL">Todos os Estados (PR, SC, RS)</option>
+            <option value="PR">Paraná (PR)</option>
+            <option value="SC">Santa Catarina (SC)</option>
+            <option value="RS">Rio Grande do Sul (RS)</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs text-slate-400 mb-1 font-medium">Tipo de Serviço</label>
+          <select class="w-full bg-slate-900 border border-slate-700 text-white rounded p-2 text-sm focus:outline-none focus:border-blue-500">
+            <option value="ALL">Todos os Serviços</option>
+            <option value="FIBRA">Lançamento de Fibra / FTTH</option>
+            <option value="INFRA">Infraestrutura & Passagem</option>
+            <option value="MANUT">Manutenção Operacional</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs text-slate-400 mb-1 font-medium">Status de Contrato</label>
+          <select class="w-full bg-slate-900 border border-slate-700 text-white rounded p-2 text-sm focus:outline-none focus:border-blue-500">
+            <option value="ALL">Todos os Status</option>
+            <option value="HOMOLOGADO">Homologado</option>
+            <option value="EM_ANALISE">Em Prospecção / Análise</option>
+          </select>
+        </div>
+        <div class="flex items-end">
+          <button class="w-full bg-blue-600 hover:bg-blue-500 text-white font-medium p-2 rounded text-sm transition flex items-center justify-center gap-2">
+            <i class="fa-solid fa-filter"></i> Aplicar Filtros
+          </button>
+        </div>
       </div>
     </section>
 
-    <!-- Gráficos e Tabelas -->
+    <!-- Indicadores Principais (KPIs) -->
+    <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div class="card p-5">
+        <p class="text-sm font-medium text-slate-400">Ordens de Serviço (OS)</p>
+        <p class="text-2xl font-bold text-white mt-1">1,248 OS</p>
+        <p class="text-xs text-blue-400 mt-2"><i class="fa-solid fa-list-check"></i> Volume Mensal Regional</p>
+      </div>
+      <div class="card p-5">
+        <p class="text-sm font-medium text-slate-400">SLA Médio de Atendimento</p>
+        <p class="text-2xl font-bold text-emerald-400 mt-1">94.8%</p>
+        <p class="text-xs text-emerald-400 mt-2"><i class="fa-solid fa-check-double"></i> Dentro da Meta Operacional</p>
+      </div>
+      <div class="card p-5">
+        <p class="text-sm font-medium text-slate-400">Parceiros Credenciados</p>
+        <p class="text-2xl font-bold text-amber-400 mt-1">42 Empresas</p>
+        <p class="text-xs text-amber-400 mt-2"><i class="fa-solid fa-handshake"></i> PR: 18 | SC: 14 | RS: 10</p>
+      </div>
+      <div class="card p-5">
+        <p class="text-sm font-medium text-slate-400">Capacidade TÉCNICA / Dia</p>
+        <p class="text-2xl font-bold text-purple-400 mt-1">115 Equipas</p>
+        <p class="text-xs text-purple-400 mt-2"><i class="fa-solid fa-users-gear"></i> Campo Ativo</p>
+      </div>
+    </section>
+
+    <!-- Gráficos de Desempenho -->
     <section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-      
-      <!-- Gráfico de Performance -->
       <div class="card p-5 lg:col-span-2 space-y-4">
         <h2 class="text-lg font-bold text-white flex items-center gap-2">
-          <i class="fa-solid fa-chart-area text-blue-400"></i> Desempenho Regional por Estado
+          <i class="fa-solid fa-chart-area text-blue-400"></i> Performance de Entrega por Estado (SLA %)
         </h2>
         <div class="h-64 relative">
           <canvas id="kpiChart"></canvas>
         </div>
       </div>
 
-      <!-- Resumo de Operações por Estado -->
       <div class="card p-5 space-y-4">
         <h2 class="text-lg font-bold text-white flex items-center gap-2">
-          <i class="fa-solid fa-list-check text-emerald-400"></i> Resumo por Estado
+          <i class="fa-solid fa-pie-chart text-purple-400"></i> Distribuição da Operação
         </h2>
-        <div class="space-y-3 text-sm">
-          <div class="flex justify-between items-center p-2 rounded bg-slate-800/60">
-            <span class="font-medium">Paraná (PR)</span>
-            <span class="px-2 py-0.5 rounded text-xs bg-emerald-500/20 text-emerald-300 font-bold">96% SLA</span>
-          </div>
-          <div class="flex justify-between items-center p-2 rounded bg-slate-800/60">
-            <span class="font-medium">Santa Catarina (SC)</span>
-            <span class="px-2 py-0.5 rounded text-xs bg-blue-500/20 text-blue-300 font-bold">93% SLA</span>
-          </div>
-          <div class="flex justify-between items-center p-2 rounded bg-slate-800/60">
-            <span class="font-medium">Rio Grande do Sul (RS)</span>
-            <span class="px-2 py-0.5 rounded text-xs bg-amber-500/20 text-amber-300 font-bold">91% SLA</span>
-          </div>
+        <div class="h-64 relative flex items-center justify-center">
+          <canvas id="distChart"></canvas>
         </div>
       </div>
+    </section>
 
+    <!-- Tabela Detalhada de Parceiros & Subempreiteiros -->
+    <section class="card p-5 space-y-4">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-700 pb-3">
+        <h2 class="text-lg font-bold text-white flex items-center gap-2">
+          <i class="fa-solid fa-network-wired text-emerald-400"></i> Estrutura de Parceiros Regional Sul
+        </h2>
+        <span class="text-xs text-slate-400">Atualizado dinamicamente</span>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm text-left text-slate-300">
+          <thead class="text-xs text-slate-400 uppercase bg-slate-800/80 border-b border-slate-700">
+            <tr>
+              <th class="py-3 px-4">Parceiro / Razão Social</th>
+              <th class="py-3 px-4">Estado</th>
+              <th class="py-3 px-4">Cidades Cobertas</th>
+              <th class="py-3 px-4">Equipas</th>
+              <th class="py-3 px-4">SLA Operacional</th>
+              <th class="py-3 px-4">Status</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-800">
+            <tr class="hover:bg-slate-800/40">
+              <td class="py-3 px-4 font-semibold text-white">Teleinfra Sul Telecom</td>
+              <td class="py-3 px-4"><span class="bg-blue-500/20 text-blue-400 px-2 py-0.5 rounded text-xs font-bold">PR</span></td>
+              <td class="py-3 px-4 text-slate-400">Curitiba, S.J. Pinhais, Ponta Grossa</td>
+              <td class="py-3 px-4">24 equipas</td>
+              <td class="py-3 px-4 font-bold text-emerald-400">96.2%</td>
+              <td class="py-3 px-4"><span class="bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded text-xs">Homologado</span></td>
+            </tr>
+            <tr class="hover:bg-slate-800/40">
+              <td class="py-3 px-4 font-semibold text-white">Litoral Fibra & Engenharia</td>
+              <td class="py-3 px-4"><span class="bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded text-xs font-bold">SC</span></td>
+              <td class="py-3 px-4 text-slate-400">Florianópolis, Joinville, Blumenau</td>
+              <td class="py-3 px-4">18 equipas</td>
+              <td class="py-3 px-4 font-bold text-emerald-400">94.0%</td>
+              <td class="py-3 px-4"><span class="bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded text-xs">Homologado</span></td>
+            </tr>
+            <tr class="hover:bg-slate-800/40">
+              <td class="py-3 px-4 font-semibold text-white">Gaucha Redes & Infra</td>
+              <td class="py-3 px-4"><span class="bg-amber-500/20 text-amber-400 px-2 py-0.5 rounded text-xs font-bold">RS</span></td>
+              <td class="py-3 px-4 text-slate-400">Porto Alegre, Caxias do Sul</td>
+              <td class="py-3 px-4">15 equipas</td>
+              <td class="py-3 px-4 font-bold text-amber-400">91.5%</td>
+              <td class="py-3 px-4"><span class="bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded text-xs">Homologado</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </section>
 
   </div>
 
   <script>
     document.addEventListener("DOMContentLoaded", function() {
-      const ctx = document.getElementById('kpiChart').getContext('2d');
-      new Chart(ctx, {
+      // Gráfico de Barras de Performance
+      const ctx1 = document.getElementById('kpiChart').getContext('2d');
+      new Chart(ctx1, {
         type: 'bar',
         data: {
-          labels: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho'],
+          labels: ['Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out'],
           datasets: [
-            { label: 'PR', data: [88, 91, 93, 95, 94, 96], backgroundColor: '#3b82f6' },
-            { label: 'SC', data: [85, 87, 89, 92, 91, 93], backgroundColor: '#10b981' },
-            { label: 'RS', data: [82, 85, 88, 90, 89, 91], backgroundColor: '#f59e0b' }
+            { label: 'Paraná (PR)', data: [91, 93, 94, 95, 96, 96.2], backgroundColor: '#3b82f6' },
+            { label: 'Santa Catarina (SC)', data: [88, 90, 91, 93, 93, 94.0], backgroundColor: '#10b981' },
+            { label: 'Rio Grande do Sul (RS)', data: [85, 87, 89, 90, 91, 91.5], backgroundColor: '#f59e0b' }
           ]
         },
         options: {
@@ -113,6 +187,25 @@
             x: { ticks: { color: '#94a3b8' }, grid: { color: '#334155' } },
             y: { ticks: { color: '#94a3b8' }, grid: { color: '#334155' }, min: 50, max: 100 }
           }
+        }
+      });
+
+      // Gráfico de Rosca de Distribuição
+      const ctx2 = document.getElementById('distChart').getContext('2d');
+      new Chart(ctx2, {
+        type: 'doughnut',
+        data: {
+          labels: ['PR (43%)', 'SC (33%)', 'RS (24%)'],
+          datasets: [{
+            data: [43, 33, 24],
+            backgroundColor: ['#3b82f6', '#10b981', '#f59e0b'],
+            borderWidth: 0
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { position: 'bottom', labels: { color: '#94a3b8' } } }
         }
       });
     });
