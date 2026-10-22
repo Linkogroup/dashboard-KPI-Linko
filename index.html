@@ -17,7 +17,7 @@
 
     * { box-sizing: border-box; }
     body { margin: 0; min-width: 320px; }
-    main { width: min(1120px, calc(100% - 32px)); margin: 0 auto; padding: 36px 0 56px; }
+    main { width: min(1280px, calc(100% - 32px)); margin: 0 auto; padding: 36px 0 56px; }
     header { padding-bottom: 24px; border-bottom: 1px solid #2a4358; }
     .eyebrow { margin: 0 0 8px; color: #42c8ef; font-size: .75rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
     h1 { margin: 0; font-size: clamp(1.6rem, 4vw, 2.25rem); line-height: 1.2; }
@@ -42,7 +42,7 @@
     [hidden] { display: none !important; }
     .auth-form { display: grid; max-width: 420px; gap: 12px; margin-top: 18px; }
     .auth-form label { display: grid; gap: 6px; color: #d5e3ee; font-size: .9rem; font-weight: 650; }
-    .auth-form input, .toolbar select { min-height: 42px; padding: 9px 11px; border: 1px solid #60788b; border-radius: 7px; background: #071523; color: #e8f4fc; font: inherit; }
+    .auth-form input, .toolbar select, .field input, .field select { min-height: 42px; padding: 9px 11px; border: 1px solid #60788b; border-radius: 7px; background: #071523; color: #e8f4fc; font: inherit; }
     .button { min-height: 42px; padding: 9px 14px; border: 1px solid #42c8ef; border-radius: 7px; background: #42c8ef; color: #071523; font: inherit; font-weight: 750; cursor: pointer; }
     .button.secondary { border-color: #60788b; background: transparent; color: #e8f4fc; }
     .button:focus-visible, input:focus-visible, select:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
@@ -51,10 +51,68 @@
     .error { min-height: 1.5em; color: #ffaaa5; font-weight: 650; }
     .metric-value { margin-top: 14px !important; color: #e8f4fc !important; font-size: 1.25rem; font-weight: 750; }
     .muted { color: #a8bac9 !important; font-size: .85rem; }
+    .filters { display: flex; gap: 12px; flex-wrap: wrap; align-items: end; margin: 16px 0; }
+    .field { display: grid; min-width: min(100%, 190px); gap: 6px; color: #d5e3ee; font-size: .9rem; font-weight: 650; }
+    .chart-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-top: 18px; }
+    figure.chart { min-width: 0; margin: 0; }
+    figure.chart figcaption { margin-bottom: 16px; font-size: 1rem; font-weight: 750; }
+    .chart-list { display: grid; gap: 14px; }
+    .chart-row { display: grid; grid-template-columns: minmax(90px, 125px) minmax(0, 1fr); gap: 12px; align-items: center; }
+    .chart-label { overflow-wrap: anywhere; color: #d5e3ee; font-size: .85rem; font-weight: 650; }
+    .stacked-bar { display: flex; min-height: 24px; overflow: hidden; border-radius: 5px; background: #071523; }
+    .stack-segment { min-width: 0; }
+    .stack-segment.status-0, .legend-swatch.status-0 { background: #7c9db8; }
+    .stack-segment.status-1, .legend-swatch.status-1 { background: #32b6da; }
+    .stack-segment.status-2, .legend-swatch.status-2 { background: #eba73c; }
+    .stack-segment.status-3, .legend-swatch.status-3 { background: #60c795; }
+    .stack-segment.status-4, .legend-swatch.status-4 { background: #db7373; }
+    .stack-segment.status-5, .legend-swatch.status-5 { background: #ac8ce0; }
+    .stack-segment.status-6, .legend-swatch.status-6 { background: #7990a2; }
+    .legend { display: flex; flex-wrap: wrap; gap: 8px 14px; margin: 14px 0 0; padding: 0; list-style: none; }
+    .legend li { display: flex; align-items: center; gap: 6px; color: #c8d6e2; font-size: .8rem; }
+    .legend-swatch { width: 12px; height: 12px; border-radius: 3px; }
+    .month-row { display: grid; gap: 6px; }
+    .month-row-title { color: #d5e3ee; font-size: .85rem; font-weight: 700; }
+    .month-series { display: grid; grid-template-columns: 80px minmax(0, 1fr) auto; gap: 8px; align-items: center; color: #c8d6e2; font-size: .8rem; }
+    .value-bar { height: 14px; overflow: hidden; border-radius: 4px; background: #071523; }
+    .value-bar span { display: block; height: 100%; min-width: 0; border-radius: inherit; background: #42c8ef; }
+    .value-bar.actual span { background: #60c795; }
+    .chart-note { margin: 14px 0 0 !important; }
+    .table-wrap { width: 100%; overflow-x: auto; margin-top: 14px; border: 1px solid #2a4358; border-radius: 9px; }
+    table { width: 100%; border-collapse: collapse; color: #e8f4fc; font-size: .88rem; }
+    caption { padding: 12px; color: #d5e3ee; font-weight: 700; text-align: left; }
+    th, td { padding: 11px 12px; border-top: 1px solid #2a4358; text-align: left; white-space: nowrap; }
+    thead th { background: #172f44; color: #d5e3ee; }
+    tbody th { font-weight: 700; }
+    .simulator-intro { max-width: 900px; }
+    .simulator-form { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; margin-top: 18px; }
+    .simulator-results { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-top: 20px; }
+    .result { padding: 14px; border: 1px solid #2a4358; border-radius: 9px; background: #071523; }
+    .result dt { color: #a8bac9; font-size: .8rem; }
+    .result dd { margin: 6px 0 0; font-size: 1.1rem; font-weight: 750; overflow-wrap: anywhere; }
+    .unavailable-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 18px; margin: 14px 0 0; padding-left: 20px; color: #e7d9bd; }
+    .positive { color: #70d6a4 !important; }
+    .negative { color: #ffaaa5 !important; }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+
+    @media print {
+      :root { color-scheme: light; background: #fff; color: #111; }
+      body, main { width: 100%; min-width: 0; margin: 0; padding: 0; background: #fff; color: #111; }
+      .notice, .card, .result { background: #fff; color: #111; }
+      .button, .filters, #simulator-form, #logout, #refresh { display: none !important; }
+      .table-wrap { overflow: visible; border-color: #888; }
+      table, th, td, caption, .muted, .chart-label, .month-row-title, .month-series, .legend li { color: #111 !important; }
+      th, td { white-space: normal; }
+      .details, figure { break-inside: avoid; }
+    }
 
     @media (max-width: 700px) {
       main { padding-top: 24px; }
-      .grid, .metrics { grid-template-columns: 1fr; }
+      .grid, .metrics, .chart-grid, .simulator-form, .simulator-results, .unavailable-list { grid-template-columns: 1fr; }
+      .chart-row { grid-template-columns: 90px minmax(0, 1fr); }
+      .toolbar { align-items: flex-start; }
+      .toolbar .section-title { width: 100%; }
+      th, td { padding: 9px 10px; }
     }
   </style>
 </head>
@@ -86,20 +144,91 @@
         <h2 class="section-title" id="dashboard-title">Indicadores por estado</h2>
         <span id="updated-at" class="muted" role="status"></span>
         <button id="refresh" class="button secondary" type="button">Atualizar</button>
+        <button id="print-summary" class="button secondary" type="button">Imprimir relatório</button>
         <button id="logout" class="button secondary" type="button">Sair</button>
       </div>
       <p id="dashboard-error" class="error" role="alert" aria-live="polite"></p>
-      <div id="state-cards" class="grid"></div>
+      <div class="filters" aria-label="Filtros do painel">
+        <label class="field" for="state-filter">UF / abrangência
+          <select id="state-filter">
+            <option value="SUL">Regional Sul</option>
+            <option value="PR">Paraná (PR)</option>
+            <option value="SC">Santa Catarina (SC)</option>
+            <option value="RS">Rio Grande do Sul (RS)</option>
+          </select>
+        </label>
+        <label class="field" for="month">Período mensal
+          <select id="month"></select>
+        </label>
+      </div>
+      <section class="details" aria-labelledby="executive-summary-title">
+        <h2 class="section-title" id="executive-summary-title">Resumo executivo do recorte</h2>
+        <p id="executive-summary" class="muted"></p>
+        <p class="muted">Resumo da consulta disponível, não relatório diário operacional: a fonte não fornece uma série diária validada nem confirma atualidade dos registros.</p>
+      </section>
+      <div class="chart-grid">
+        <figure class="card chart" aria-labelledby="status-chart-title">
+          <figcaption id="status-chart-title">Situação dos endereços por UF</figcaption>
+          <div id="status-chart" class="chart-list"></div>
+          <ul id="status-legend" class="legend" aria-label="Legenda dos status"></ul>
+        </figure>
+        <figure class="card chart" aria-labelledby="monthly-chart-title">
+          <figcaption id="monthly-chart-title">Meta e produção derivada por período</figcaption>
+          <div id="monthly-chart" class="chart-list"></div>
+          <ul class="legend" aria-label="Legenda da comparação mensal">
+            <li><span class="legend-swatch status-1" aria-hidden="true"></span>Meta</li>
+            <li><span class="legend-swatch status-3" aria-hidden="true"></span>Produção derivada</li>
+          </ul>
+          <p class="muted chart-note">As barras usam escala relativa aos valores disponíveis; não representam projeção.</p>
+        </figure>
+      </div>
+      <section class="details" aria-labelledby="address-table-title">
+        <h2 class="section-title" id="address-table-title">Resumo atual por estado</h2>
+        <p class="muted">Endereços e blocos são medidas distintas. Os totais de status contam endereços; blocos liberados consideram apenas quantidades informadas.</p>
+        <div id="address-table" class="table-wrap"></div>
+      </section>
       <section class="details" aria-labelledby="monthly-title">
-        <h2 class="section-title" id="monthly-title">Metas e produção mensal</h2>
-        <label for="month">Período disponível</label>
-        <select id="month"></select>
-        <div id="monthly-cards" class="metrics"></div>
+        <h2 class="section-title" id="monthly-title">Detalhe do período selecionado</h2>
+        <p class="muted">A produção é derivada dos registros disponíveis e não comprova execução física. Meta ausente ou produção não calculável permanecem como “Não disponível”.</p>
+        <div id="monthly-table" class="table-wrap"></div>
+      </section>
+      <section class="details" aria-labelledby="simulator-title">
+        <h2 class="section-title" id="simulator-title">Simulador financeiro — cenário hipotético</h2>
+        <p class="muted simulator-intro">Simulação editável por UF e mês, independente dos dados operacionais. Informe manualmente as unidades do cenário; elas não são preenchidas nem vinculadas a endereços ou blocos. Valores abaixo são premissas de simulação, não resultados reais.</p>
+        <form id="simulator-form" class="simulator-form" novalidate>
+          <label class="field" for="sim-state">UF do cenário
+            <select id="sim-state">
+              <option value="PR">Paraná (PR)</option>
+              <option value="SC">Santa Catarina (SC)</option>
+              <option value="RS">Rio Grande do Sul (RS)</option>
+            </select>
+          </label>
+          <label class="field" for="sim-units">Unidades do cenário (entrada manual)
+            <input id="sim-units" inputmode="numeric" autocomplete="off" placeholder="Informe um número inteiro" />
+          </label>
+          <label class="field" for="sim-revenue">Receita potencial por unidade (premissa R$)
+            <input id="sim-revenue" inputmode="decimal" autocomplete="off" value="1800,00" />
+          </label>
+          <label class="field" for="sim-partner">Parcela do parceiro por unidade (premissa R$)
+            <input id="sim-partner" inputmode="decimal" autocomplete="off" value="900,00" />
+          </label>
+          <label class="field" for="sim-contribution">Contribuição por unidade (premissa R$)
+            <input id="sim-contribution" inputmode="decimal" autocomplete="off" value="900,00" />
+          </label>
+          <label class="field" for="sim-fixed-cost">Custo fixo por UF/mês (premissa R$)
+            <input id="sim-fixed-cost" inputmode="decimal" autocomplete="off" value="20000,00" />
+          </label>
+        </form>
+        <p id="simulator-scope" class="muted" role="status"></p>
+        <p id="simulator-message" class="muted" role="status" aria-live="polite">Informe as unidades do cenário para calcular os resultados hipotéticos.</p>
+        <dl id="simulator-results" class="simulator-results" hidden></dl>
+        <p class="muted">Cálculo: receita potencial = unidades × receita por unidade; parcela do parceiro = unidades × parcela por unidade; contribuição segue sua premissa editável e é comparada com receita menos parceiro; resultado após custo fixo = contribuição menos R$ fixo por UF/mês. Ponto de equilíbrio = arredondamento para cima do custo fixo ÷ contribuição por unidade. Nenhuma variável representa realizado, faturamento, pagamento ou previsão operacional.</p>
       </section>
       <section class="details" aria-labelledby="source-title">
         <h2 id="source-title">Rastreabilidade e limites</h2>
         <p id="source-info" class="muted"></p>
-        <p>FCMD, ociosidade, equipes, agenda, projeções, faturamento e recebimentos não são exibidos sem fontes validadas.</p>
+        <p>As áreas abaixo permanecem indisponíveis sem fontes validadas conectadas:</p>
+        <div id="availability-table" class="table-wrap"></div>
       </section>
     </section>
 
@@ -107,184 +236,7 @@
       As solicitações autenticadas são feitas pelo servidor para endereços e prumadas. O browser recebe somente agregados PR/SC/RS, sem identificadores, endereços, contatos ou telefones. A sessão é um cookie HttpOnly, Secure, SameSite=Strict, limitado a este domínio.
     </footer>
   </main>
-  <script>
-    const stateNames = { PR: 'Paraná', SC: 'Santa Catarina', RS: 'Rio Grande do Sul' };
-    const number = value => Number.isSafeInteger(value) ? value.toLocaleString('pt-BR') : '—';
-    const loginPanel = document.getElementById('login-panel');
-    const dashboard = document.getElementById('dashboard');
-    const loginForm = document.getElementById('login-form');
-    const passwordInput = document.getElementById('password');
-    const loginError = document.getElementById('login-error');
-    const dashboardError = document.getElementById('dashboard-error');
-    let snapshot = null;
-
-    function showLogin(message = '') {
-      loginPanel.hidden = false;
-      dashboard.hidden = true;
-      dashboardError.textContent = '';
-      loginError.textContent = message;
-      snapshot = null;
-    }
-
-    function renderSnapshot(data) {
-      if (!Array.isArray(data.states) || !Array.isArray(data.monthly)) {
-        throw new Error('A resposta KPI tem formato inválido.');
-      }
-      snapshot = data;
-      const cards = document.getElementById('state-cards');
-      cards.replaceChildren();
-      for (const state of data.states) {
-        if (!Object.hasOwn(stateNames, state.state)) continue;
-        const card = document.createElement('article');
-        card.className = 'card';
-        const title = document.createElement('h3');
-        title.textContent = `${stateNames[state.state]} · ${state.state}`;
-        card.append(title);
-        for (const [label, value] of [
-          ['Endereços', state.addresses],
-          ['Autorizados', state.authorized],
-          ['Em execução', state.execution],
-          ['Concluídos', state.completed],
-          ['Blocos liberados', state.releasedBlocks],
-        ]) {
-          const metric = document.createElement('p');
-          metric.className = 'metric-value';
-          metric.textContent = `${label}: ${number(value)}`;
-          card.append(metric);
-        }
-        if (state.releasedBlocksMissing > 0) {
-          const missing = document.createElement('p');
-          missing.className = 'muted';
-          missing.textContent = `Blocos sem quantidade informada: ${number(state.releasedBlocksMissing)}`;
-          card.append(missing);
-        }
-        cards.append(card);
-      }
-
-      const monthSelect = document.getElementById('month');
-      const selected = monthSelect.value;
-      monthSelect.replaceChildren();
-      for (const period of data.monthly) {
-        const option = document.createElement('option');
-        option.value = period.month;
-        option.textContent = period.month;
-        monthSelect.append(option);
-      }
-      if (data.monthly.some(period => period.month === selected)) monthSelect.value = selected;
-      renderMonth();
-
-      const extracted = new Date(data.extractedAt);
-      document.getElementById('updated-at').textContent = Number.isNaN(extracted.getTime())
-        ? 'Consulta concluída'
-        : `Consulta: ${extracted.toLocaleString('pt-BR')}`;
-      document.getElementById('source-info').textContent =
-        `Revisões de origem — endereços: ${number(data.revisions?.addresses)}; prumadas: ${number(data.revisions?.prumadas)}. Atualidade da fonte: não verificada. ${data.limitations?.production || ''}`;
-      loginPanel.hidden = true;
-      dashboard.hidden = false;
-      dashboardError.textContent = '';
-    }
-
-    function renderMonth() {
-      const period = snapshot?.monthly.find(item => item.month === document.getElementById('month').value);
-      const cards = document.getElementById('monthly-cards');
-      cards.replaceChildren();
-      if (!period) {
-        const unavailable = document.createElement('p');
-        unavailable.className = 'muted';
-        unavailable.textContent = 'Sem período mensal disponível na fonte.';
-        cards.append(unavailable);
-        return;
-      }
-      for (const state of period.states) {
-        if (!Object.hasOwn(stateNames, state.state)) continue;
-        const card = document.createElement('article');
-        card.className = 'card';
-        const title = document.createElement('h3');
-        title.textContent = `${stateNames[state.state]} · ${state.state}`;
-        const goal = document.createElement('p');
-        goal.textContent = `Meta: ${state.goal === null ? 'Não disponível' : number(state.goal)}`;
-        const actual = document.createElement('p');
-        actual.textContent = `Produção derivada: ${state.actual === null ? 'Não disponível' : number(state.actual)}`;
-        card.append(title, goal, actual);
-        cards.append(card);
-      }
-    }
-
-    async function refresh() {
-      try {
-        const response = await fetch('/api/kpi', {
-          cache: 'no-store',
-          credentials: 'same-origin',
-          headers: { Accept: 'application/json' },
-        });
-        const result = await response.json();
-        if (response.status === 401) {
-          showLogin('Sua sessão expirou. Entre novamente.');
-          return;
-        }
-        if (response.status === 403) {
-          showLogin(result.error || 'Acesso permitido somente ao Gestor Master.');
-          return;
-        }
-        if (!response.ok) throw new Error(result.error || 'Não foi possível consultar os indicadores.');
-        renderSnapshot(result);
-      } catch (error) {
-        if (dashboard.hidden) loginError.textContent = error.message;
-        else dashboardError.textContent = error.message;
-      }
-    }
-
-    loginForm.addEventListener('submit', async event => {
-      event.preventDefault();
-      const button = document.getElementById('login-button');
-      button.disabled = true;
-      loginError.textContent = '';
-      try {
-        const response = await fetch('/api/auth/login', {
-          method: 'POST',
-          credentials: 'same-origin',
-          cache: 'no-store',
-          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-          body: JSON.stringify({
-            email: document.getElementById('email').value,
-            password: passwordInput.value,
-          }),
-        });
-        passwordInput.value = '';
-        const result = await response.json();
-        if (!response.ok) throw new Error(result.error || 'Não foi possível autenticar.');
-        await refresh();
-      } catch (error) {
-        passwordInput.value = '';
-        loginError.textContent = error.message;
-      } finally {
-        button.disabled = false;
-      }
-    });
-
-    document.getElementById('logout').addEventListener('click', async () => {
-      try {
-        const response = await fetch('/api/auth/logout', {
-          method: 'POST',
-          credentials: 'same-origin',
-          cache: 'no-store',
-          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-          body: '{}',
-        });
-        if (!response.ok) throw new Error('Não foi possível confirmar a saída no Worker.');
-      } catch (error) {
-        showLogin(error.message);
-        return;
-      }
-      showLogin();
-    });
-
-    document.getElementById('refresh').addEventListener('click', refresh);
-    document.getElementById('month').addEventListener('change', renderMonth);
-    refresh();
-    setInterval(() => {
-      if (!document.hidden && !dashboard.hidden) refresh();
-    }, 30000);
-  </script>
+  <script src="/lib/kpi-simulator.js" defer></script>
+  <script src="/lib/dashboard.js" defer></script>
 </body>
 </html>

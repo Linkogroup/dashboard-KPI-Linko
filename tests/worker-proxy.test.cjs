@@ -395,5 +395,36 @@ test('aggregation returns stable counts and status summaries without retaining r
   assert.equal(result.states[2].addresses, 0);
   assert.deepEqual(result.states.map((state) => state.state), ['PR', 'SC', 'RS']);
   assert.equal(result.freshness.status, 'unverified');
+  assert.ok(result.limitations.unavailable.includes('Medição, aprovação ou confirmação de execução física'));
+  assert.ok(result.limitations.unavailable.includes('Faturamento, medição faturável e cobrança'));
+  assert.ok(result.limitations.unavailable.includes('Contas a receber, recebimentos e pagamentos'));
   assert.equal(JSON.stringify(result).includes('private'), false);
+});
+
+test('missing monthly target remains unavailable instead of becoming zero', () => {
+  const result = buildKpiSnapshot(
+    addresses,
+    { ...production, targets: { '2026-10': { PR: 8, SC: 5 } } },
+    new Date('2026-10-22T12:00:00.000Z'),
+  );
+  assert.equal(result.monthly[0].states[2].goal, null);
+  assert.equal(result.monthly[0].regional.goal, null);
+});
+
+test('monthly derived production remains unavailable when any record has unknown block quantity', () => {
+  const result = buildKpiSnapshot(
+    addresses,
+    {
+      ...production,
+      daily: [
+        ...production.daily,
+        { source: 'addresses', date: '2026-10-06', state: 'SC', volume: 4, missingBlocks: 0 },
+        { source: 'addresses', date: '2026-10-07', state: 'SC', missingBlocks: 1 },
+      ],
+    },
+    new Date('2026-10-22T12:00:00.000Z'),
+  );
+  assert.equal(result.monthly[0].states[1].actual, null);
+  assert.equal(result.monthly[0].states[1].missingBlocks, 1);
+  assert.equal(result.monthly[0].regional.actual, null);
 });
