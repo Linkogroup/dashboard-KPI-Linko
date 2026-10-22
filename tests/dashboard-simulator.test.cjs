@@ -7,6 +7,7 @@ const {
   monthlySeries,
   parseAmount,
   parseSimulationInputs,
+  rowsForScope,
 } = require('../lib/kpi-simulator.js');
 
 test('monetary input accepts decimal comma, decimal point, and grouped Brazilian values', () => {
@@ -102,6 +103,14 @@ test('monthly series preserves missing targets and uncalculable production inste
   assert.deepEqual(monthlySeries(periods, 'SUL'), [
     { month: '2026-10', goal: null, actual: null },
   ]);
+});
+
+test('state filter scopes tables and summary rows to one UF or Regional Sul', () => {
+  const states = ['PR', 'SC', 'RS'].map((state) => ({ state }));
+  const regional = { state: 'SUL' };
+  assert.deepEqual(rowsForScope(states, regional, 'SUL'), [...states, regional]);
+  assert.deepEqual(rowsForScope(states, regional, 'SC'), [{ state: 'SC' }]);
+  assert.deepEqual(rowsForScope(states, regional, 'XX'), []);
 });
 
 test('dashboard markup and client logic preserve accessible labels, mobile layout, local proxy, and unavailable modules', () => {
