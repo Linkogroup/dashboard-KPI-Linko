@@ -86,6 +86,11 @@
     .growth-bar.positive { left: 50%; }
     .growth-bar.negative { right: 50%; }
     .growth-no-comparison { height: 16px; color: #a8bac9; font-size: .8rem; }
+    .attainment-row { display: grid; grid-template-columns: 82px minmax(0, 1fr) minmax(125px, auto); gap: 12px; align-items: center; }
+    .attainment-track { position: relative; height: 14px; overflow: hidden; border-radius: 4px; background: #071523; }
+    .attainment-fill { height: 100%; border-radius: inherit; background: #42c8ef; }
+    .attainment-target { position: absolute; top: 0; height: 100%; border-left: 2px dashed #fff; }
+    .attainment-delta { min-width: 125px; text-align: right; }
     .chart-note { margin: 14px 0 0 !important; }
     .table-wrap { width: 100%; overflow-x: auto; margin-top: 14px; border: 1px solid #2a4358; border-radius: 9px; }
     table { width: 100%; border-collapse: collapse; color: #e8f4fc; font-size: .88rem; }
@@ -202,6 +207,15 @@
           <div id="growth-chart" class="chart-list"></div>
         </figure>
         <div id="growth-table" class="table-wrap"></div>
+      </section>
+      <section class="details" aria-labelledby="attainment-title">
+        <h2 class="section-title" id="attainment-title">Atingimento histórico da meta cadastrada</h2>
+        <p id="attainment-note" class="muted">Percentual = produção derivada completa ÷ meta cadastrada positiva × 100. Desvio = produção derivada − meta. Linha tracejada marca 100% da meta. Meta ausente, meta zero ou produção não calculável não geram percentual nem são convertidas em zero. A competência selecionada define o limite histórico; metas futuras nunca entram no gráfico.</p>
+        <figure class="card chart" aria-labelledby="attainment-chart-title">
+          <figcaption id="attainment-chart-title">Atingimento por competência</figcaption>
+          <div id="attainment-chart" class="chart-list"></div>
+        </figure>
+        <div id="attainment-table" class="table-wrap"></div>
       </section>
       <section class="notice" aria-labelledby="forecast-title">
         <h2 id="forecast-title">Projeção operacional: indisponível</h2>
