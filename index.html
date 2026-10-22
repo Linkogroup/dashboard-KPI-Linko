@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#071523" />
-  <title>KPI F4A — Linko Group | Regional Sul</title>
+  <title>KPI F4A — Linko Group | Acesso operacional</title>
   <style>
     :root {
       color-scheme: dark;
@@ -16,114 +16,44 @@
     }
 
     * { box-sizing: border-box; }
-    body { margin: 0; min-width: 320px; }
-    main { width: min(1120px, calc(100% - 32px)); margin: 0 auto; padding: 36px 0 56px; }
-    header { padding-bottom: 24px; border-bottom: 1px solid #2a4358; }
-    .eyebrow { margin: 0 0 8px; color: #42c8ef; font-size: .75rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
-    h1 { margin: 0; font-size: clamp(1.6rem, 4vw, 2.25rem); line-height: 1.2; }
-    header p:last-child { margin: 10px 0 0; color: #a8bac9; }
-    .notice, .card { border: 1px solid #2a4358; border-radius: 12px; background: #102337; }
-    .notice { margin: 24px 0; padding: 18px 20px; border-color: #8e6d35; background: #2a251b; }
+    body { display: grid; min-height: 100vh; margin: 0; padding: 24px; place-items: center; }
+    main { width: min(680px, 100%); }
+    .eyebrow { margin: 0 0 12px; color: #42c8ef; font-size: .75rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+    .card { padding: clamp(24px, 6vw, 44px); border: 1px solid #2a4358; border-radius: 16px; background: #102337; box-shadow: 0 24px 64px #0004; }
+    h1 { margin: 0; font-size: clamp(1.75rem, 6vw, 2.5rem); line-height: 1.15; }
+    .intro, .notice p, footer { color: #a8bac9; line-height: 1.6; }
+    .intro { margin: 16px 0 24px; }
+    .notice { margin: 0 0 24px; padding: 16px 18px; border: 1px solid #8e6d35; border-radius: 10px; background: #2a251b; }
     .notice h2 { margin: 0 0 6px; color: #ffd27d; font-size: 1rem; }
-    .notice p { margin: 0; color: #e7d9bd; line-height: 1.55; }
-    .grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
-    .card { padding: 20px; }
-    .card h2 { margin: 0; font-size: 1rem; }
-    .card p { margin: 10px 0 0; color: #a8bac9; line-height: 1.5; }
-    .state { display: inline-block; margin-top: 18px; padding: 5px 9px; border: 1px solid #536476; border-radius: 999px; color: #d2dce5; font-size: .75rem; font-weight: 650; }
-    .section-title { margin: 32px 0 14px; font-size: 1.15rem; }
-    .metrics { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
-    .metric-label { color: #42c8ef !important; font-size: .75rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
-    .metric-status { margin-top: 14px !important; color: #f4bd65 !important; font-weight: 700; }
-    .details { margin-top: 24px; }
-    .details summary { color: #c8d6e2; cursor: pointer; font-weight: 650; }
-    .details p { color: #a8bac9; line-height: 1.6; }
-    footer { margin-top: 32px; padding-top: 16px; border-top: 1px solid #2a4358; color: #8296a8; font-size: .85rem; line-height: 1.5; }
-
-    @media (max-width: 700px) {
-      main { padding-top: 24px; }
-      .grid, .metrics { grid-template-columns: 1fr; }
-    }
+    .notice p { margin: 0; color: #e7d9bd; }
+    .link { display: inline-flex; min-height: 48px; align-items: center; justify-content: center; padding: 12px 18px; border-radius: 8px; background: #42c8ef; color: #071523; font-weight: 750; text-align: center; text-decoration: none; }
+    .link:hover { background: #72dcf8; }
+    .link:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+    .url { display: block; margin-top: 10px; color: #a8bac9; font-size: .875rem; overflow-wrap: anywhere; }
+    footer { margin-top: 20px; font-size: .875rem; }
   </style>
 </head>
 <body>
   <main>
-    <header>
+    <section class="card" aria-labelledby="page-title">
       <p class="eyebrow">F4A Consultoria LTDA · Linko Group</p>
-      <h1>Indicadores executivos — Regional Sul</h1>
-      <p>Escopo previsto: Paraná (PR), Santa Catarina (SC) e Rio Grande do Sul (RS).</p>
-    </header>
+      <h1 id="page-title">Indicadores executivos — Regional Sul</h1>
+      <p class="intro">A experiência operacional do painel é hospedada no Worker Linko Group, não nesta página.</p>
 
-    <section class="notice" aria-labelledby="data-status">
-      <h2 id="data-status">Integração de dados não configurada</h2>
-      <p>Este painel não está conectado a fontes operacionais. Nenhum indicador, projeção ou dado de parceiro está disponível; não use esta página para decisões operacionais ou financeiras.</p>
+      <section class="notice" aria-labelledby="access-title">
+        <h2 id="access-title">Acesso autenticado</h2>
+        <p>Use seu login existente no Worker. O painel só será exibido se sua conta tiver acesso permitido; esta página não autentica nem concede acesso.</p>
+      </section>
+
+      <a class="link" href="https://f4a-paineis.michael-r-alves82.workers.dev/dashboard-kpi">
+        Abrir painel operacional
+      </a>
+      <span class="url">https://f4a-paineis.michael-r-alves82.workers.dev/dashboard-kpi</span>
+
+      <footer>
+        A rota autenticada está sendo implementada em uma PR separada no Worker. Até que essa alteração seja implantada, a rota pode não estar disponível. Nenhum indicador ou dado operacional é exibido nesta página.
+      </footer>
     </section>
-
-    <section aria-labelledby="regional-sources">
-      <h2 class="section-title" id="regional-sources">Disponibilidade por estado</h2>
-      <div class="grid">
-        <article class="card">
-          <h2>Paraná · PR</h2>
-          <p>Não há fonte de dados conectada para este estado.</p>
-          <span class="state">Dados indisponíveis</span>
-        </article>
-        <article class="card">
-          <h2>Santa Catarina · SC</h2>
-          <p>Não há fonte de dados conectada para este estado.</p>
-          <span class="state">Dados indisponíveis</span>
-        </article>
-        <article class="card">
-          <h2>Rio Grande do Sul · RS</h2>
-          <p>Não há fonte de dados conectada para este estado.</p>
-          <span class="state">Dados indisponíveis</span>
-        </article>
-      </div>
-    </section>
-
-    <section aria-labelledby="operational-data">
-      <h2 class="section-title" id="operational-data">Indicadores operacionais</h2>
-      <div class="metrics">
-        <article class="card">
-          <p class="metric-label">Endereços e acesso</p>
-          <p>Deve ser acompanhado separadamente de blocos liberados e obra.</p>
-          <p class="metric-status">Indisponível · fonte não conectada</p>
-        </article>
-        <article class="card">
-          <p class="metric-label">Blocos liberados e obra</p>
-          <p>Estoque liberado e execução não estão disponíveis para consulta.</p>
-          <p class="metric-status">Indisponível · fonte não conectada</p>
-        </article>
-        <article class="card">
-          <p class="metric-label">Produção e ciclo financeiro</p>
-          <p>Aprovação, medição, faturamento e recebimento são etapas distintas; seus dados não estão conectados.</p>
-          <p class="metric-status">Indisponível · fonte não conectada</p>
-        </article>
-        <article class="card">
-          <p class="metric-label">FCMD e ociosidade</p>
-          <p>Indisponíveis até que existam fontes operacionais validadas.</p>
-          <p class="metric-status">Indisponível · sem fonte validada</p>
-        </article>
-        <article class="card">
-          <p class="metric-label">Projeção</p>
-          <p>Não calculada. Uma projeção futura deverá respeitar estoque liberado, equipes e agenda.</p>
-          <p class="metric-status">Indisponível · dados insuficientes</p>
-        </article>
-        <article class="card">
-          <p class="metric-label">Atualização das fontes</p>
-          <p>Não há conexão para verificar a data de atualização ou sinalizar dados desatualizados.</p>
-          <p class="metric-status">Sem timestamp de origem</p>
-        </article>
-      </div>
-    </section>
-
-    <details class="details">
-      <summary>Premissas permitidas somente para simulação</summary>
-      <p>Receita potencial: R$ 1.800 por unidade; parceiro: R$ 900 por unidade; contribuição: R$ 900 por unidade; custo fixo: R$ 20.000 por UF/mês. Esses valores não são realizados, metas ou dados de produção e não são usados para calcular os indicadores exibidos.</p>
-    </details>
-
-    <footer>
-      Esta página não autentica usuários nem aplica autorização por perfil/UF. Não insira ou conecte dados reais até existir uma API com autenticação e autorização verificadas no servidor.
-    </footer>
   </main>
 </body>
 </html>
