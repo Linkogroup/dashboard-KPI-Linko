@@ -204,9 +204,10 @@
               <option value="PR">Paraná (PR)</option>
               <option value="SC">Santa Catarina (SC)</option>
               <option value="RS">Rio Grande do Sul (RS)</option>
+              <option value="SUL">Regional Sul (PR + SC + RS)</option>
             </select>
           </label>
-          <label class="field" for="sim-units">Unidades do cenário (entrada manual)
+          <label class="field" for="sim-units">Unidades do cenário (entrada manual; unidade faturável não validada)
             <input id="sim-units" inputmode="numeric" autocomplete="off" placeholder="Informe um número inteiro" />
           </label>
           <label class="field" for="sim-revenue">Receita potencial por unidade (premissa R$)
@@ -225,7 +226,7 @@
         <p id="simulator-scope" class="muted" role="status"></p>
         <p id="simulator-message" class="muted" role="status" aria-live="polite">Informe as unidades do cenário para calcular os resultados hipotéticos.</p>
         <dl id="simulator-results" class="simulator-results" hidden></dl>
-        <p class="muted">Cálculo: receita potencial = unidades × receita por unidade; parcela do parceiro = unidades × parcela por unidade; contribuição segue sua premissa editável e é comparada com receita menos parceiro; resultado após custo fixo = contribuição menos R$ fixo por UF/mês. Ponto de equilíbrio = arredondamento para cima do custo fixo ÷ contribuição por unidade. Nenhuma variável representa realizado, faturamento, pagamento ou previsão operacional.</p>
+        <p class="muted">Cálculo: receita potencial = unidades manuais × receita por unidade; parcela do parceiro = unidades × parcela por unidade; contribuição segue sua premissa editável e é comparada com receita menos parceiro; custo fixo total = quantidade de UFs × premissa por UF/mês (uma UF: R$ 20.000; Regional Sul: 3 × R$ 20.000 = R$ 60.000). Resultado após custo fixo = contribuição menos o custo total do cenário; ponto de equilíbrio = arredondamento para cima do custo fixo total ÷ contribuição por unidade. A equivalência com unidade faturável não foi validada. Nenhuma variável representa realizado, faturamento, pagamento ou previsão operacional.</p>
       </section>
       <section class="details" aria-labelledby="source-title">
         <h2 id="source-title">Rastreabilidade e limites</h2>
