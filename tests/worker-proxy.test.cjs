@@ -205,6 +205,39 @@ test('login fails closed and revokes non-master or must-change sessions without 
   assert.equal(res.body.includes(token), false);
 });
 
+test('a Master with a temporary password is not issued a KPI cookie', async () => {
+  const calls = [];
+  const proxy = createProxy({
+    fetchImpl: async (url, options) => {
+      calls.push(url);
+      if (url.endsWith('/api/auth/login')) {
+        return upstreamResponse(200, { next: '/primeiro-acesso' }, { 'Set-Cookie': workerCookie });
+      }
+      if (url.endsWith('/api/auth/me')) {
+        return upstreamResponse(200, { accessProfile: 'master', mustChange: true });
+      }
+      if (url.endsWith('/api/auth/logout')) return upstreamResponse(200, { next: '/login' });
+      throw new Error('Unexpected upstream endpoint');
+    },
+  });
+  const res = mockResponse();
+
+  await proxy.login(mockRequest({
+    method: 'POST',
+    path: '/api/auth/login',
+    body: { email: 'master@example.com', password: 'temporary-password' },
+  }), res);
+
+  assert.equal(res.statusCode, 403);
+  assert.match(res.headers['set-cookie'], /Max-Age=0$/);
+  assert.deepEqual(calls, [
+    `${workerOrigin}/api/auth/login`,
+    `${workerOrigin}/api/auth/me`,
+    `${workerOrigin}/api/auth/logout`,
+  ]);
+  assert.equal(res.body.includes(token), false);
+});
+
 test('malformed Worker cookie and unexpected login redirects fail closed', async () => {
   assert.equal(extractWorkerToken(upstreamResponse(200, {}, {
     'Set-Cookie': `${workerCookie}; Domain=workers.dev`,
