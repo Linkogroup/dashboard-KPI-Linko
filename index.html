@@ -1,367 +1,129 @@
 <!DOCTYPE html>
-<html lang="pt-BR" class="dark">
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>KPI F4A — Linko Group | Inteligência Executiva Regional Sul v9.0</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          colors: {
-            brand: { bg: '#071523', surface: '#102337', surface2: '#142a40', border: '#2a4358', cyan: '#42c8ef', blue: '#3c8df2', green: '#40cba3', amber: '#f4bd65', red: '#fa8394' }
-          }
-        }
-      }
-    }
-  </script>
+  <meta name="theme-color" content="#071523" />
+  <title>KPI F4A — Linko Group | Regional Sul</title>
   <style>
-    body { background-color: #071523; color: #e8f4fc; font-family: system-ui, -apple-system, sans-serif; }
-    .card { background: linear-gradient(150deg, #10273d, #102134); border: 1px solid #2a4358; border-radius: 0.75rem; box-shadow: 0 13px 40px rgba(0,0,0,.17); }
-    .badge-pr { background-color: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.3); }
-    .badge-sc { background-color: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
-    .badge-rs { background-color: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
+    :root {
+      color-scheme: dark;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #071523;
+      color: #e8f4fc;
+      font-synthesis: none;
+      text-rendering: optimizeLegibility;
+    }
+
+    * { box-sizing: border-box; }
+    body { margin: 0; min-width: 320px; }
+    main { width: min(1120px, calc(100% - 32px)); margin: 0 auto; padding: 36px 0 56px; }
+    header { padding-bottom: 24px; border-bottom: 1px solid #2a4358; }
+    .eyebrow { margin: 0 0 8px; color: #42c8ef; font-size: .75rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+    h1 { margin: 0; font-size: clamp(1.6rem, 4vw, 2.25rem); line-height: 1.2; }
+    header p:last-child { margin: 10px 0 0; color: #a8bac9; }
+    .notice, .card { border: 1px solid #2a4358; border-radius: 12px; background: #102337; }
+    .notice { margin: 24px 0; padding: 18px 20px; border-color: #8e6d35; background: #2a251b; }
+    .notice h2 { margin: 0 0 6px; color: #ffd27d; font-size: 1rem; }
+    .notice p { margin: 0; color: #e7d9bd; line-height: 1.55; }
+    .grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+    .card { padding: 20px; }
+    .card h2 { margin: 0; font-size: 1rem; }
+    .card p { margin: 10px 0 0; color: #a8bac9; line-height: 1.5; }
+    .state { display: inline-block; margin-top: 18px; padding: 5px 9px; border: 1px solid #536476; border-radius: 999px; color: #d2dce5; font-size: .75rem; font-weight: 650; }
+    .section-title { margin: 32px 0 14px; font-size: 1.15rem; }
+    .metrics { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+    .metric-label { color: #42c8ef !important; font-size: .75rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+    .metric-status { margin-top: 14px !important; color: #f4bd65 !important; font-weight: 700; }
+    .details { margin-top: 24px; }
+    .details summary { color: #c8d6e2; cursor: pointer; font-weight: 650; }
+    .details p { color: #a8bac9; line-height: 1.6; }
+    footer { margin-top: 32px; padding-top: 16px; border-top: 1px solid #2a4358; color: #8296a8; font-size: .85rem; line-height: 1.5; }
+
+    @media (max-width: 700px) {
+      main { padding-top: 24px; }
+      .grid, .metrics { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
-<body class="min-h-screen p-4 md:p-6 space-y-6">
-  <div class="max-w-7xl mx-auto space-y-6">
-    
-    <!-- Cabeçalho Oficial -->
-    <header class="flex flex-col md:flex-row md:items-center md:justify-between border-b border-slate-700 pb-4 gap-4">
-      <div>
-        <div class="text-xs text-cyan-400 font-bold uppercase tracking-wider mb-1">F4A Consultoria LTDA • Linko Group</div>
-        <h1 class="text-2xl md:text-3xl font-extrabold text-white flex items-center gap-3">
-          <i class="fa-solid fa-chart-line text-cyan-400"></i> Centro de Comando Executivo — Regional Sul
-        </h1>
-        <p class="text-slate-400 text-sm mt-1">Versão 9.0 (Produção Segura • Escopo Exclusivo: PR, SC, RS)[cite: 3]</p>
-      </div>
-      <div class="flex items-center gap-3 flex-wrap">
-        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-          <span class="w-2 h-2 rounded-full bg-emerald-400 mr-2 animate-pulse"></span> Sistema Ativo (60s Sync)[cite: 3]
-        </span>
-        <div class="flex items-center gap-2 bg-slate-900 border border-slate-700 px-3 py-1.5 rounded-lg text-xs">
-          <label class="text-slate-400 font-medium"><i class="fa-solid fa-shield-halved mr-1"></i> Perfil:</label>
-          <select id="userRole" onchange="changeRole()" class="bg-slate-800 text-white rounded px-2 py-1 outline-none border border-slate-600 font-semibold">
-            <option value="admin">Administrador</option>
-            <option value="diretoria">Diretoria</option>
-            <option value="gestor" selected>Gestor Regional</option>
-            <option value="supervisorPR">Supervisor — PR</option>
-            <option value="supervisorSC">Supervisor — SC</option>
-            <option value="supervisorRS">Supervisor — RS</option>
-          </select>
-        </div>
-      </div>
+<body>
+  <main>
+    <header>
+      <p class="eyebrow">F4A Consultoria LTDA · Linko Group</p>
+      <h1>Indicadores executivos — Regional Sul</h1>
+      <p>Escopo previsto: Paraná (PR), Santa Catarina (SC) e Rio Grande do Sul (RS).</p>
     </header>
 
-    <!-- Filtros Territoriais e Operacionais -->
-    <section class="card p-5 space-y-4">
-      <div class="flex items-center justify-between border-b border-slate-700/60 pb-2">
-        <h3 class="text-sm font-semibold text-slate-300 uppercase tracking-wider flex items-center gap-2">
-          <i class="fa-solid fa-filter text-cyan-400"></i> Filtros de Escopo e Competência
-        </h3>
-        <span id="filteredCount" class="text-xs text-slate-400">Carregando indicadores...</span>
-      </div>
-      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-        <div>
-          <label class="block text-xs text-slate-400 mb-1 font-medium">Estado / Regional</label>
-          <select id="filterState" onchange="applyFilters()" class="w-full bg-slate-900 border border-slate-700 text-white rounded p-2 text-sm focus:outline-none focus:border-cyan-400">
-            <option value="ALL">Consolidado Sul (PR, SC, RS)[cite: 3]</option>
-            <option value="PR">Paraná (PR)</option>
-            <option value="SC">Santa Catarina (SC)</option>
-            <option value="RS">Rio Grande do Sul (RS)</option>
-          </select>
-        </div>
-        <div>
-          <label class="block text-xs text-slate-400 mb-1 font-medium">Competência</label>
-          <select id="filterCompetencia" class="w-full bg-slate-900 border border-slate-700 text-white rounded p-2 text-sm focus:outline-none focus:border-cyan-400">
-            <option value="2026-10">Outubro / 2026</option>
-            <option value="2026-09">Setembro / 2026</option>
-          </select>
-        </div>
-        <div>
-          <label class="block text-xs text-slate-400 mb-1 font-medium">Status de Credenciamento</label>
-          <select id="filterStatus" onchange="applyFilters()" class="w-full bg-slate-900 border border-slate-700 text-white rounded p-2 text-sm focus:outline-none focus:border-cyan-400">
-            <option value="ALL">Todos os Status</option>
-            <option value="Homologado">Homologado</option>
-            <option value="Em Homologação">Em Homologação</option>
-            <option value="Em Prospecção">Em Prospecção</option>
-          </select>
-        </div>
-        <div>
-          <label class="block text-xs text-slate-400 mb-1 font-medium">Busca por Parceiro / Cidade</label>
-          <div class="relative">
-            <input type="text" id="searchInput" onkeyup="applyFilters()" placeholder="Nome ou cidade..." class="w-full bg-slate-900 border border-slate-700 text-white rounded p-2 text-sm focus:outline-none focus:border-cyan-400 pl-8">
-            <i class="fa-solid fa-magnifying-glass absolute left-2.5 top-3 text-slate-500 text-xs"></i>
-          </div>
-        </div>
+    <section class="notice" aria-labelledby="data-status">
+      <h2 id="data-status">Integração de dados não configurada</h2>
+      <p>Este painel não está conectado a fontes operacionais. Nenhum indicador, projeção ou dado de parceiro está disponível; não use esta página para decisões operacionais ou financeiras.</p>
+    </section>
+
+    <section aria-labelledby="regional-sources">
+      <h2 class="section-title" id="regional-sources">Disponibilidade por estado</h2>
+      <div class="grid">
+        <article class="card">
+          <h2>Paraná · PR</h2>
+          <p>Não há fonte de dados conectada para este estado.</p>
+          <span class="state">Dados indisponíveis</span>
+        </article>
+        <article class="card">
+          <h2>Santa Catarina · SC</h2>
+          <p>Não há fonte de dados conectada para este estado.</p>
+          <span class="state">Dados indisponíveis</span>
+        </article>
+        <article class="card">
+          <h2>Rio Grande do Sul · RS</h2>
+          <p>Não há fonte de dados conectada para este estado.</p>
+          <span class="state">Dados indisponíveis</span>
+        </article>
       </div>
     </section>
 
-    <!-- KPIs Oficiais Consolidados -->
-    <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-      <div class="card p-5">
-        <p class="text-sm font-medium text-slate-400">Produção Concluída vs Meta</p>
-        <p id="kpiProdMeta" class="text-2xl font-bold text-white mt-1">1,240 / 1,450</p>
-        <p id="kpiPercentual" class="text-xs text-cyan-400 mt-2"><i class="fa-solid fa-arrow-up"></i> 85.5% atingido no mês</p>
-      </div>
-      <div class="card p-5">
-        <p class="text-sm font-medium text-slate-400">Receita Potencial Estimada</p>
-        <p id="kpiReceita" class="text-2xl font-bold text-emerald-400 mt-1">R$ 2.232.000</p>
-        <p class="text-xs text-emerald-400 mt-2"><i class="fa-solid fa-coins"></i> Base: R$ 1.800 / unidade[cite: 3]</p>
-      </div>
-      <div class="card p-5">
-        <p class="text-sm font-medium text-slate-400">Resultado Simplificado</p>
-        <p id="kpiResultado" class="text-2xl font-bold text-amber-400 mt-1">R$ 1.052.000</p>
-        <p id="kpiFixoInfo" class="text-xs text-amber-400 mt-2"><i class="fa-solid fa-scale-balanced"></i> Fixo deduzido: R$ 60.000 (3 UFs)[cite: 3]</p>
-      </div>
-      <div class="card p-5">
-        <p class="text-sm font-medium text-slate-400">Backlog e Capacidade</p>
-        <p id="kpiBacklog" class="text-2xl font-bold text-purple-400 mt-1">342 Blocos</p>
-        <p class="text-xs text-purple-400 mt-2"><i class="fa-solid fa-users-gear"></i> 142 Equipes ativas em campo[cite: 3]</p>
-      </div>
-    </section>
-
-    <!-- Gráficos de Desempenho -->
-    <section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-      <div class="card p-5 lg:col-span-2 space-y-4">
-        <div class="flex items-center justify-between border-b border-slate-700/60 pb-3">
-          <h2 class="text-base font-bold text-white flex items-center gap-2">
-            <i class="fa-solid fa-chart-area text-cyan-400"></i> Trajetória de Produção x Meta (Dias Úteis)[cite: 3]
-          </h2>
-          <span class="text-xs text-slate-400">Regional Sul consolidada</span>
-        </div>
-        <div class="h-64 relative">
-          <canvas id="slaChart"></canvas>
-        </div>
-      </div>
-
-      <div class="card p-5 space-y-4">
-        <div class="flex items-center justify-between border-b border-slate-700/60 pb-3">
-          <h2 class="text-base font-bold text-white flex items-center gap-2">
-            <i class="fa-solid fa-chart-pie text-purple-400"></i> Participação por UF
-          </h2>
-          <span class="text-xs text-slate-400">PR / SC / RS</span>
-        </div>
-        <div class="h-64 relative flex items-center justify-center">
-          <canvas id="distChart"></canvas>
-        </div>
+    <section aria-labelledby="operational-data">
+      <h2 class="section-title" id="operational-data">Indicadores operacionais</h2>
+      <div class="metrics">
+        <article class="card">
+          <p class="metric-label">Endereços e acesso</p>
+          <p>Deve ser acompanhado separadamente de blocos liberados e obra.</p>
+          <p class="metric-status">Indisponível · fonte não conectada</p>
+        </article>
+        <article class="card">
+          <p class="metric-label">Blocos liberados e obra</p>
+          <p>Estoque liberado e execução não estão disponíveis para consulta.</p>
+          <p class="metric-status">Indisponível · fonte não conectada</p>
+        </article>
+        <article class="card">
+          <p class="metric-label">Produção e ciclo financeiro</p>
+          <p>Aprovação, medição, faturamento e recebimento são etapas distintas; seus dados não estão conectados.</p>
+          <p class="metric-status">Indisponível · fonte não conectada</p>
+        </article>
+        <article class="card">
+          <p class="metric-label">FCMD e ociosidade</p>
+          <p>Indisponíveis até que existam fontes operacionais validadas.</p>
+          <p class="metric-status">Indisponível · sem fonte validada</p>
+        </article>
+        <article class="card">
+          <p class="metric-label">Projeção</p>
+          <p>Não calculada. Uma projeção futura deverá respeitar estoque liberado, equipes e agenda.</p>
+          <p class="metric-status">Indisponível · dados insuficientes</p>
+        </article>
+        <article class="card">
+          <p class="metric-label">Atualização das fontes</p>
+          <p>Não há conexão para verificar a data de atualização ou sinalizar dados desatualizados.</p>
+          <p class="metric-status">Sem timestamp de origem</p>
+        </article>
       </div>
     </section>
 
-    <!-- Matriz de Parceiros e Credenciados (Regional Sul) -->
-    <section class="card p-5 space-y-4">
-      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-700 pb-3">
-        <div>
-          <h2 class="text-lg font-bold text-white flex items-center gap-2">
-            <i class="fa-solid fa-network-wired text-emerald-400"></i> Matriz de Credenciados — Regional Sul
-          </h2>
-          <p class="text-xs text-slate-400 mt-0.5">Controle de capacidade, equipes e SLA nos estados do Paraná, Santa Catarina e Rio Grande do Sul[cite: 3]</p>
-        </div>
-        <div>
-          <button onclick="exportCSV()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded text-xs border border-slate-700 transition flex items-center gap-1.5">
-            <i class="fa-solid fa-file-csv text-emerald-400"></i> Exportar Dados (CSV)
-          </button>
-        </div>
-      </div>
+    <details class="details">
+      <summary>Premissas permitidas somente para simulação</summary>
+      <p>Receita potencial: R$ 1.800 por unidade; parceiro: R$ 900 por unidade; contribuição: R$ 900 por unidade; custo fixo: R$ 20.000 por UF/mês. Esses valores não são realizados, metas ou dados de produção e não são usados para calcular os indicadores exibidos.</p>
+    </details>
 
-      <div class="overflow-x-auto">
-        <table class="w-full text-sm text-left text-slate-300">
-          <thead class="text-xs text-slate-400 uppercase bg-slate-800/80 border-b border-slate-700">
-            <tr>
-              <th class="py-3 px-4">Parceiro / Credenciado</th>
-              <th class="py-3 px-4">UF</th>
-              <th class="py-3 px-4">Cidades Atendidas</th>
-              <th class="py-3 px-4">Serviço</th>
-              <th class="py-3 px-4">Equipes</th>
-              <th class="py-3 px-4">SLA Operacional</th>
-              <th class="py-3 px-4">Status</th>
-            </tr>
-          </thead>
-          <tbody id="partnersTableBody" class="divide-y divide-slate-800">
-            <!-- Preenchido dinamicamente com segurança -->
-          </tbody>
-        </table>
-      </div>
-    </section>
-
-  </div>
-
-  <script>
-    // Base de dados rigorosa baseada na Versão 9.0 Oficial
-    const partnersData = [
-      { name: "Teleinfra Sul Telecom LTDA", state: "PR", cities: "Curitiba, São José dos Pinhais, Araucária", service: "FTTH", teams: 28, sla: 96.8, status: "Homologado", goal: 550, done: 490 },
-      { name: "Litoral Fibra & Engenharia", state: "SC", cities: "Florianópolis, Joinville, Blumenau", service: "FTTH", teams: 22, sla: 95.2, status: "Homologado", goal: 480, done: 410 },
-      { name: "Gaúcha Redes & Infraestrutura", state: "RS", cities: "Porto Alegre, Caxias do Sul, Canoas", service: "INFRA", teams: 18, sla: 93.5, status: "Homologado", goal: 420, done: 340 },
-      { name: "Paraná Conectividade e Serviços", state: "PR", cities: "Ponta Grossa, Cascavel, Toledo", service: "FTTH", teams: 16, sla: 94.1, status: "Homologado", goal: 300, done: 280 },
-      { name: "Vale do Itajaí Telecom", state: "SC", cities: "Itajaí, Balneário Camboriú, Brusque", service: "MANUT", teams: 12, sla: 92.8, status: "Homologado", goal: 250, done: 220 },
-      { name: "Sulmídia Engenharia de Campo", state: "RS", cities: "Pelotas, Rio Grande, Santa Maria", service: "INFRA", teams: 14, sla: 91.0, status: "Em Homologação", goal: 200, done: 150 }
-    ];
-
-    let slaChartInstance = null;
-    let distChartInstance = null;
-
-    document.addEventListener("DOMContentLoaded", function() {
-      applyRolePermissions();
-      applyFilters();
-      renderCharts();
-    });
-
-    function changeRole() {
-      applyRolePermissions();
-      applyFilters();
-    }
-
-    function applyRolePermissions() {
-      const role = document.getElementById("userRole").value;
-      const stateSelect = document.getElementById("filterState");
-      
-      if (role.startsWith("supervisor")) {
-        const uf = role.replace("supervisor", "");
-        stateSelect.value = uf;
-        stateSelect.disabled = true;
-      } else {
-        stateSelect.disabled = false;
-      }
-    }
-
-    function escapeHtml(str) {
-      return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
-    }
-
-    function applyFilters() {
-      const role = document.getElementById("userRole").value;
-      let state = document.getElementById("filterState").value;
-      
-      if (role.startsWith("supervisor")) {
-        state = role.replace("supervisor", "");
-        document.getElementById("filterState").value = state;
-      }
-
-      const status = document.getElementById("filterStatus").value;
-      const search = document.getElementById("searchInput").value.toLowerCase().trim();
-
-      const filtered = partnersData.filter(item => {
-        const matchState = (state === "ALL" || item.state === state);
-        const matchStatus = (status === "ALL" || item.status === status);
-        const matchSearch = (item.name.toLowerCase().includes(search) || item.cities.toLowerCase().includes(search));
-        return matchState && matchStatus && matchSearch;
-      });
-
-      renderTable(filtered);
-      updateKPIs(filtered, state);
-    }
-
-    function updateKPIs(data, stateFilter) {
-      let totalDone = data.reduce((acc, curr) => acc + curr.done, 0);
-      let totalGoal = data.reduce((acc, curr) => acc + curr.goal, 0);
-      let activeUFs = stateFilter === "ALL" ? 3 : 1;
-      
-      // Premissas financeiras oficiais v9.0: Receita R$ 1.800/unid, Fixo R$ 20.000 por UF[cite: 3]
-      let receitaPotencial = totalDone * 1800;
-      let custoFixoTotal = activeUFs * 20000;
-      let custoDireto = totalDone * 900;
-      let resultadoOperacional = receitaPotencial - custoDireto - custoFixoTotal;
-
-      document.getElementById("kpiProdMeta").innerText = `${totalDone.toLocaleString()} / ${totalGoal.toLocaleString()} blocos`;
-      let pct = totalGoal > 0 ? ((totalDone / totalGoal) * 100).toFixed(1) : 0;
-      document.getElementById("kpiPercentual").innerHTML = `<i class="fa-solid fa-arrow-up"></i> ${pct}% atingido no mês`;
-      document.getElementById("kpiReceita").innerText = receitaPotencial.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 });
-      document.getElementById("kpiResultado").innerText = resultadoOperacional.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 });
-      document.getElementById("kpiFixoInfo").innerHTML = `<i class="fa-solid fa-scale-balanced"></i> Fixo deduzido: R$ ${custoFixoTotal.toLocaleString()} (${activeUFs} UF${activeUFs>1?'s':''})[cite: 3]`;
-      
-      let totalTeams = data.reduce((acc, curr) => acc + curr.teams, 0);
-      document.getElementById("kpiBacklog").innerText = `${totalTeams * 8} Blocos (Estoque)`;
-      document.getElementById("filteredCount").innerText = `Exibindo ${data.length} de ${partnersData.length} credenciados`;
-    }
-
-    function renderTable(data) {
-      const tbody = document.getElementById("partnersTableBody");
-      tbody.innerHTML = "";
-
-      if (!data || data.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="7" class="py-6 text-center text-slate-500">Nenhum parceiro encontrado para os filtros e permissões aplicados.</td></tr>`;
-        return;
-      }
-
-      data.forEach(item => {
-        const badgeClass = item.state === "PR" ? "badge-pr" : (item.state === "SC" ? "badge-sc" : "badge-rs");
-        const statusClass = item.status === "Homologado" ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30" : "bg-amber-500/20 text-amber-400 border border-amber-500/30";
-        const slaColor = item.sla >= 95 ? "text-emerald-400" : "text-amber-400";
-
-        const tr = document.createElement("tr");
-        tr.className = "hover:bg-slate-800/50 transition";
-        tr.innerHTML = `
-          <td class="py-3 px-4 font-semibold text-white">${escapeHtml(item.name)}</td>
-          <td class="py-3 px-4"><span class="px-2 py-0.5 rounded text-xs font-bold ${badgeClass}">${escapeHtml(item.state)}</span></td>
-          <td class="py-3 px-4 text-slate-400">${escapeHtml(item.cities)}</td>
-          <td class="py-3 px-4"><span class="text-xs bg-slate-800 text-slate-300 border border-slate-700 px-2 py-0.5 rounded">${escapeHtml(item.service)}</span></td>
-          <td class="py-3 px-4 font-medium text-slate-200">${item.teams} equipes</td>
-          <td class="py-3 px-4 font-bold ${slaColor}">${item.sla.toFixed(1)}%</td>
-          <td class="py-3 px-4"><span class="px-2.5 py-0.5 rounded-full text-xs font-semibold ${statusClass}">${escapeHtml(item.status)}</span></td>
-        `;
-        tbody.appendChild(tr);
-      });
-    }
-
-    function renderCharts() {
-      const ctx1 = document.getElementById('slaChart').getContext('2d');
-      slaChartInstance = new Chart(ctx1, {
-        type: 'bar',
-        data: {
-          labels: ['Semana 1', 'Semana 2', 'Semana 3', 'Semana 4 (Projeção)'],
-          datasets: [
-            { label: 'Paraná (PR)', data: [120, 260, 410, 770], backgroundColor: '#3b82f6' },
-            { label: 'Santa Catarina (SC)', data: [100, 220, 350, 630], backgroundColor: '#10b981' },
-            { label: 'Rio Grande do Sul (RS)', data: [80, 170, 290, 490], backgroundColor: '#f59e0b' }
-          ]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: { legend: { labels: { color: '#94a3b8' } } },
-          scales: {
-            x: { ticks: { color: '#94a3b8' }, grid: { color: '#2a4358' } },
-            y: { ticks: { color: '#94a3b8' }, grid: { color: '#2a4358' } }
-          }
-        }
-      });
-
-      const ctx2 = document.getElementById('distChart').getContext('2d');
-      distChartInstance = new Chart(ctx2, {
-        type: 'doughnut',
-        data: {
-          labels: ['Paraná (42%)', 'Santa Catarina (35%)', 'Rio Grande do Sul (23%)'],
-          datasets: [{
-            data: [42, 35, 23],
-            backgroundColor: ['#3b82f6', '#10b981', '#f59e0b'],
-            borderWidth: 0
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: { legend: { position: 'bottom', labels: { color: '#94a3b8' } } }
-        }
-      });
-    }
-
-    function exportCSV() {
-      let csv = "Parceiro;Estado;Cidades;Servico;Equipes;SLA;Status\n";
-      partnersData.forEach(row => {
-        csv += `${row.name};${row.state};${row.cities};${row.service};${row.teams};${row.sla}%;${row.status}\n`;
-      });
-      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-      const link = document.createElement("a");
-      link.href = URL.createObjectURL(blob);
-      link.setAttribute("download", "kpi_f4a_regional_sul.csv");
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    }
-  </script>
+    <footer>
+      Esta página não autentica usuários nem aplica autorização por perfil/UF. Não insira ou conecte dados reais até existir uma API com autenticação e autorização verificadas no servidor.
+    </footer>
+  </main>
 </body>
 </html>
