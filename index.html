@@ -48,6 +48,8 @@
     .button:focus-visible, input:focus-visible, select:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
     .toolbar { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
     .toolbar .section-title { margin: 0 auto 0 0; }
+    #snapshot-status { margin: 0; color: #70d6a4; font-weight: 750; }
+    #snapshot-status.stale { color: #ffaaa5; }
     .error { min-height: 1.5em; color: #ffaaa5; font-weight: 650; }
     .metric-value { margin-top: 14px !important; color: #e8f4fc !important; font-size: 1.25rem; font-weight: 750; }
     .muted { color: #a8bac9 !important; font-size: .85rem; }
@@ -143,6 +145,7 @@
       <div class="toolbar">
         <h2 class="section-title" id="dashboard-title">Indicadores por estado</h2>
         <span id="updated-at" class="muted" role="status"></span>
+        <span id="snapshot-status" role="status" aria-live="polite" hidden></span>
         <button id="refresh" class="button secondary" type="button">Atualizar</button>
         <button id="print-summary" class="button secondary" type="button">Imprimir relatório</button>
         <button id="logout" class="button secondary" type="button">Sair</button>

@@ -114,6 +114,7 @@ test('dashboard markup and client logic preserve accessible labels, mobile layou
   assert.match(html, /name="viewport"/);
   assert.match(html, /@media \(max-width: 700px\)/);
   assert.match(html, /id="sim-units"/);
+  assert.match(html, /id="snapshot-status"/);
   assert.match(html, /aria-live="polite"/);
   const ids = [...html.matchAll(/\bid="([^"]+)"/g)].map((match) => match[1]);
   assert.equal(new Set(ids).size, ids.length, 'HTML id attributes must be unique');
@@ -132,6 +133,8 @@ test('dashboard markup and client logic preserve accessible labels, mobile layou
   assert.match(dashboard, /period\.regional\.state === 'SUL'/);
   assert.match(dashboard, /\}, 60000\)/);
   assert.match(dashboard, /addEventListener\('visibilitychange'/);
+  assert.match(dashboard, /dados exibidos estão DESATUALIZADOS/);
+  assert.match(dashboard, /Entre com sua conta do Worker para consultar os indicadores/);
   assert.match(dashboard, /scope = 'row'/);
   assert.match(dashboard, /\/api\/kpi/);
   assert.doesNotMatch(dashboard, /workers\.dev|innerHTML/);
