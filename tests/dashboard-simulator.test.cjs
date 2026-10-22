@@ -6,6 +6,7 @@ const {
   calculateSimulation,
   buildAggregateCsv,
   historicalGrowth,
+  monthlyPerformance,
   monthlySeries,
   parseAmount,
   parseSimulationInputs,
@@ -114,10 +115,10 @@ test('monthly series preserves missing targets and uncalculable production inste
   const periods = [{
     month: '2026-10',
     states: [
-      { state: 'PR', goal: null, actual: 0 },
-      { state: 'SC', goal: 5, actual: null },
+      { state: 'PR', goal: null, actual: 0, entries: 1, missingBlocks: 0 },
+      { state: 'SC', goal: 5, actual: 4, entries: 1, missingBlocks: 1 },
     ],
-    regional: { goal: null, actual: null },
+    regional: { goal: null, actual: null, entries: 2, missingBlocks: 1 },
   }];
   assert.deepEqual(monthlySeries(periods, 'PR'), [
     { month: '2026-10', goal: null, actual: 0 },
@@ -125,16 +126,64 @@ test('monthly series preserves missing targets and uncalculable production inste
   assert.deepEqual(monthlySeries(periods, 'SUL'), [
     { month: '2026-10', goal: null, actual: null },
   ]);
+  assert.deepEqual(monthlySeries(periods, 'SC'), [
+    { month: '2026-10', goal: 5, actual: null },
+  ], 'known subtotal is unavailable when any entry lacks block quantity');
+});
+
+test('monthly attainment requires complete actuals and a positive target; scopes UF/Sul and excludes future months', () => {
+  const periods = [
+    {
+      month: '2026-10',
+      states: [
+        { state: 'PR', goal: 10, actual: 8, entries: 1, missingBlocks: 0 },
+        { state: 'SC', goal: 5, actual: 3, entries: 1, missingBlocks: 0 },
+        { state: 'RS', goal: 5, actual: 7, entries: 1, missingBlocks: 0 },
+      ],
+      regional: { state: 'SUL', goal: 20, actual: 18, entries: 3, missingBlocks: 0 },
+    },
+    {
+      month: '2026-11',
+      states: [
+        { state: 'PR', goal: 0, actual: 0, entries: 1, missingBlocks: 0 },
+        { state: 'SC', goal: 0, actual: 1, entries: 1, missingBlocks: 0 },
+        { state: 'RS', goal: 0, actual: 0, entries: 1, missingBlocks: 0 },
+      ],
+      regional: { state: 'SUL', goal: 0, actual: 1, entries: 3, missingBlocks: 0 },
+    },
+    {
+      month: '2026-12',
+      states: [{ state: 'PR', goal: 10, actual: 12, entries: 1, missingBlocks: 0 }],
+      regional: { state: 'SUL', goal: 10, actual: 12, entries: 1, missingBlocks: 0 },
+    },
+  ];
+
+  assert.deepEqual(monthlyPerformance(periods, 'PR', '2026-11'), [
+    { month: '2026-10', goal: 10, actual: 8, delta: -2, attainmentPercent: 80 },
+    { month: '2026-11', goal: 0, actual: 0, delta: 0, attainmentPercent: null },
+  ]);
+  assert.deepEqual(monthlyPerformance(periods, 'SC', '2026-11'), [
+    { month: '2026-10', goal: 5, actual: 3, delta: -2, attainmentPercent: 60 },
+    { month: '2026-11', goal: 0, actual: 1, delta: 1, attainmentPercent: null },
+  ]);
+  assert.deepEqual(monthlyPerformance(periods, 'SUL', '2026-11'), [
+    { month: '2026-10', goal: 20, actual: 18, delta: -2, attainmentPercent: 90 },
+    { month: '2026-11', goal: 0, actual: 1, delta: 1, attainmentPercent: null },
+  ]);
+  assert.deepEqual(monthlyPerformance(periods, 'PR', '2026-12').at(-1), {
+    month: '2026-12', goal: 10, actual: 12, delta: 2, attainmentPercent: 120,
+  });
+  assert.deepEqual(monthlyPerformance(periods, 'PR', '2026-09'), []);
 });
 
 test('historical growth uses only complete nonnegative actuals and adjacent calendar months', () => {
   const periods = [
-    { month: '2026-08', states: [{ state: 'PR', goal: 0, actual: 10 }] },
-    { month: '2026-09', states: [{ state: 'PR', goal: 0, actual: 5 }] },
-    { month: '2026-10', states: [{ state: 'PR', goal: 0, actual: null }] },
-    { month: '2026-11', states: [{ state: 'PR', goal: 0, actual: 0 }] },
-    { month: '2026-12', states: [{ state: 'PR', goal: -4, actual: 9 }] },
-    { month: '2027-01', states: [{ state: 'PR', goal: 0, actual: -2 }] },
+    { month: '2026-08', states: [{ state: 'PR', goal: 0, actual: 10, entries: 1, missingBlocks: 0 }] },
+    { month: '2026-09', states: [{ state: 'PR', goal: 0, actual: 5, entries: 1, missingBlocks: 0 }] },
+    { month: '2026-10', states: [{ state: 'PR', goal: 0, actual: null, entries: 1, missingBlocks: 1 }] },
+    { month: '2026-11', states: [{ state: 'PR', goal: 0, actual: 0, entries: 1, missingBlocks: 0 }] },
+    { month: '2026-12', states: [{ state: 'PR', goal: -4, actual: 9, entries: 1, missingBlocks: 0 }] },
+    { month: '2027-01', states: [{ state: 'PR', goal: 0, actual: -2, entries: 1, missingBlocks: 0 }] },
   ];
   assert.deepEqual(historicalGrowth(periods, 'PR', '2026-12'), [
     { month: '2026-08', actual: 10, previousActual: null, change: null, percent: null },
@@ -147,9 +196,9 @@ test('historical growth uses only complete nonnegative actuals and adjacent cale
 
 test('historical growth does not fill missing months with zero or compare across a gap', () => {
   const periods = [
-    { month: '2026-01', states: [{ state: 'PR', actual: 8 }] },
-    { month: '2026-03', states: [{ state: 'PR', actual: 4 }] },
-    { month: '2026-05', states: [{ state: 'PR', actual: 6 }] },
+    { month: '2026-01', states: [{ state: 'PR', actual: 8, entries: 1, missingBlocks: 0 }] },
+    { month: '2026-03', states: [{ state: 'PR', actual: 4, entries: 1, missingBlocks: 0 }] },
+    { month: '2026-05', states: [{ state: 'PR', actual: 6, entries: 1, missingBlocks: 0 }] },
   ];
   assert.deepEqual(historicalGrowth(periods, 'PR', '2026-05'), [
     { month: '2026-01', actual: 8, previousActual: null, change: null, percent: null },
@@ -179,13 +228,13 @@ test('aggregate CSV exports only filtered aggregates and clearly labels future t
     monthly: [
       {
         month: '2026-11',
-        states: [{ state: 'PR', goal: 0, actual: 0 }],
-        regional: { state: 'SUL', goal: 0, actual: 0 },
+        states: [{ state: 'PR', goal: 0, actual: 0, entries: 1, missingBlocks: 0 }],
+        regional: { state: 'SUL', goal: 0, actual: 0, entries: 1, missingBlocks: 0 },
       },
       {
         month: '2026-12',
-        states: [{ state: 'PR', goal: 12, actual: null }],
-        regional: { state: 'SUL', goal: 12, actual: null },
+        states: [{ state: 'PR', goal: 12, actual: null, entries: 1, missingBlocks: 1 }],
+        regional: { state: 'SUL', goal: 12, actual: null, entries: 1, missingBlocks: 1 },
       },
     ],
   };
@@ -199,6 +248,11 @@ test('aggregate CSV exports only filtered aggregates and clearly labels future t
     buildAggregateCsv(snapshot, 'PR', '2026-11', '2026-11'),
     /"Meta mensal cadastrada";0;/,
     'zero target stays a recorded zero',
+  );
+  assert.doesNotMatch(
+    buildAggregateCsv(snapshot, 'PR', '2026-10', '2026-11'),
+    /"2026-11";"Histórico"/,
+    'historical export follows the selected month',
   );
 });
 
@@ -231,6 +285,9 @@ test('dashboard markup and client logic preserve accessible labels, mobile layou
   assert.match(html, /id="snapshot-status"/);
   assert.match(html, /id="growth-chart"/);
   assert.match(html, /id="growth-table"/);
+  assert.match(html, /id="attainment-chart"/);
+  assert.match(html, /id="attainment-table"/);
+  assert.match(html, /Atingimento histórico da meta cadastrada/);
   assert.match(html, /id="export-csv"/);
   assert.match(html, /Projeção operacional: indisponível/);
   assert.match(html, /aria-live="polite"/);
@@ -249,12 +306,16 @@ test('dashboard markup and client logic preserve accessible labels, mobile layou
   assert.match(dashboard, /\['Em Execução', 'Em execução'\]/);
   assert.match(dashboard, /!data\.monthly\.every\(validMonthlyPeriod\)/);
   assert.match(dashboard, /period\.regional\.state === 'SUL'/);
+  assert.match(dashboard, /state\.missingBlocks === 0/);
   assert.match(dashboard, /\}, 60000\)/);
   assert.match(dashboard, /addEventListener\('visibilitychange'/);
   assert.match(dashboard, /dados exibidos estão DESATUALIZADOS/);
   assert.match(dashboard, /Entre com sua conta do Worker para consultar os indicadores/);
   assert.match(dashboard, /timeZone: 'America\/Sao_Paulo'/);
   assert.match(dashboard, /historicalGrowth\(snapshot\.monthly/);
+  assert.match(dashboard, /monthlyPerformance\(snapshot\.monthly, stateFilter\.value/);
+  assert.match(dashboard, /renderAttainment\(\)/);
+  assert.match(dashboard, /Desvio \(produção − meta\)/);
   assert.match(dashboard, /buildAggregateCsv\(/);
   assert.match(dashboard, /\.month <= currentMonth/);
   assert.match(dashboard, /Não disponível \(sem competência atual ou anterior\)/);
