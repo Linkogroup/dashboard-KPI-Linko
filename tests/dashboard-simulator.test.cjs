@@ -4,6 +4,8 @@ const fs = require('node:fs');
 const path = require('node:path');
 const {
   calculateSimulation,
+  buildAggregateCsv,
+  historicalGrowth,
   monthlySeries,
   parseAmount,
   parseSimulationInputs,
@@ -125,6 +127,81 @@ test('monthly series preserves missing targets and uncalculable production inste
   ]);
 });
 
+test('historical growth uses only complete nonnegative actuals and adjacent calendar months', () => {
+  const periods = [
+    { month: '2026-08', states: [{ state: 'PR', goal: 0, actual: 10 }] },
+    { month: '2026-09', states: [{ state: 'PR', goal: 0, actual: 5 }] },
+    { month: '2026-10', states: [{ state: 'PR', goal: 0, actual: null }] },
+    { month: '2026-11', states: [{ state: 'PR', goal: 0, actual: 0 }] },
+    { month: '2026-12', states: [{ state: 'PR', goal: -4, actual: 9 }] },
+    { month: '2027-01', states: [{ state: 'PR', goal: 0, actual: -2 }] },
+  ];
+  assert.deepEqual(historicalGrowth(periods, 'PR', '2026-12'), [
+    { month: '2026-08', actual: 10, previousActual: null, change: null, percent: null },
+    { month: '2026-09', actual: 5, previousActual: 10, change: -5, percent: -50 },
+    { month: '2026-11', actual: 0, previousActual: null, change: null, percent: null },
+    { month: '2026-12', actual: 9, previousActual: 0, change: 9, percent: null },
+  ]);
+  assert.equal(monthlySeries(periods, 'PR')[4].goal, null, 'negative target is unavailable, not zero');
+});
+
+test('historical growth does not fill missing months with zero or compare across a gap', () => {
+  const periods = [
+    { month: '2026-01', states: [{ state: 'PR', actual: 8 }] },
+    { month: '2026-03', states: [{ state: 'PR', actual: 4 }] },
+    { month: '2026-05', states: [{ state: 'PR', actual: 6 }] },
+  ];
+  assert.deepEqual(historicalGrowth(periods, 'PR', '2026-05'), [
+    { month: '2026-01', actual: 8, previousActual: null, change: null, percent: null },
+    { month: '2026-03', actual: 4, previousActual: null, change: null, percent: null },
+    { month: '2026-05', actual: 6, previousActual: null, change: null, percent: null },
+  ]);
+});
+
+test('aggregate CSV exports only filtered aggregates and clearly labels future targets', () => {
+  const sensitive = 'private-street-and-contact';
+  const snapshot = {
+    states: [{
+      state: 'PR',
+      addresses: 2,
+      statuses: { 'Não tratado': 1, Autorizado: 1 },
+      releasedBlocks: 4,
+      releasedBlocksMissing: 0,
+      rawAddress: sensitive,
+    }],
+    regional: {
+      state: 'SUL',
+      addresses: 2,
+      statuses: { 'Não tratado': 1, Autorizado: 1 },
+      releasedBlocks: 4,
+      releasedBlocksMissing: 0,
+    },
+    monthly: [
+      {
+        month: '2026-11',
+        states: [{ state: 'PR', goal: 0, actual: 0 }],
+        regional: { state: 'SUL', goal: 0, actual: 0 },
+      },
+      {
+        month: '2026-12',
+        states: [{ state: 'PR', goal: 12, actual: null }],
+        regional: { state: 'SUL', goal: 12, actual: null },
+      },
+    ],
+  };
+  const csv = buildAggregateCsv(snapshot, 'PR', '2026-12', '2026-11');
+  assert.match(csv, /Meta cadastrada \(não é previsão\)/);
+  assert.match(csv, /"Produção derivada";"Não disponível"/);
+  assert.match(csv, /"2026-11";"Histórico"/);
+  assert.doesNotMatch(csv, /private-street-and-contact/);
+  assert.doesNotMatch(csv, /"2026-12";"Histórico"/);
+  assert.match(
+    buildAggregateCsv(snapshot, 'PR', '2026-11', '2026-11'),
+    /"Meta mensal cadastrada";0;/,
+    'zero target stays a recorded zero',
+  );
+});
+
 test('state filter scopes tables and summary rows to one UF or Regional Sul', () => {
   const states = ['PR', 'SC', 'RS'].map((state) => ({ state }));
   const regional = { state: 'SUL' };
@@ -152,6 +229,10 @@ test('dashboard markup and client logic preserve accessible labels, mobile layou
   assert.match(html, /@media \(max-width: 700px\)/);
   assert.match(html, /id="sim-units"/);
   assert.match(html, /id="snapshot-status"/);
+  assert.match(html, /id="growth-chart"/);
+  assert.match(html, /id="growth-table"/);
+  assert.match(html, /id="export-csv"/);
+  assert.match(html, /Projeção operacional: indisponível/);
   assert.match(html, /aria-live="polite"/);
   const ids = [...html.matchAll(/\bid="([^"]+)"/g)].map((match) => match[1]);
   assert.equal(new Set(ids).size, ids.length, 'HTML id attributes must be unique');
@@ -173,6 +254,9 @@ test('dashboard markup and client logic preserve accessible labels, mobile layou
   assert.match(dashboard, /dados exibidos estão DESATUALIZADOS/);
   assert.match(dashboard, /Entre com sua conta do Worker para consultar os indicadores/);
   assert.match(dashboard, /timeZone: 'America\/Sao_Paulo'/);
+  assert.match(dashboard, /historicalGrowth\(snapshot\.monthly/);
+  assert.match(dashboard, /buildAggregateCsv\(/);
+  assert.match(dashboard, /\.month <= currentMonth/);
   assert.match(dashboard, /Não disponível \(sem competência atual ou anterior\)/);
   assert.match(dashboard, /scope = 'row'/);
   assert.match(dashboard, /\/api\/kpi/);
