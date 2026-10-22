@@ -2,29 +2,28 @@
 
 ## Estado atual
 
-O repositório contém uma página estática (`index.html`) e uma regra da Vercel que encaminha as rotas para essa página. Não foram encontrados aplicação de servidor, API, banco de dados, mecanismo de autenticação, pipeline de deploy ou testes automatizados.
+O repositório contém uma página estática (`index.html`) e uma regra da Vercel que encaminha as rotas para essa página. Não há função server-side/API Vercel, mecanismo de autenticação ou proxy para a fonte de dados. Por isso, o site não consegue buscar nem exibir os indicadores operacionais.
 
-O painel foi mantido sem dados operacionais até que fontes reais e controles de acesso estejam disponíveis. Números, metas, parceiros, equipes, SLAs e gráficos anteriormente embutidos na página não eram provenientes de uma integração verificável e foram removidos. A página não autentica usuários nem deve receber dados reais.
+O painel permanece sem dados operacionais; valores simulados não são usados como fallback. A página não autentica usuários e não deve receber credenciais ou dados reais no navegador.
 
-## Fonte candidata identificada
+## Diagnóstico da conexão
 
-`Linkogroup/f4a-paineis` contém código para um Worker Cloudflare com D1 e rotas autenticadas de endereços (`/api/enderecos`) e produção (`/api/prumadas`). O repositório informa que a conexão Cloudflare e a integração ainda não estão ativas e que a atualização de login precisa ser instalada e validada. A existência dessas rotas no código não comprova um serviço publicado nem uma fonte operacional disponível.
+A fonte definida é `GET /api/dashboard-kpi` no Worker `f4a-paineis`. Essa rota exige uma sessão autenticada no próprio Worker, e o Worker não fornece CORS. Este repositório não possui um backend que possa autenticar-se na fonte ou manter uma sessão dela. O navegador não pode ler a resposta dessa origem, e a página não tem a sessão necessária; adicionar somente CORS não resolveria a autenticação.
 
-As rotas usam sessão do próprio aplicativo e a autorização encontrada é por painel; não há contrato de sessão compartilhada, API de leitura para este dashboard ou autorização por UF. Não conectar o navegador diretamente à API nem espelhar suas credenciais. Uma futura integração precisa confirmar a implantação e atualização dos dados de origem, definir autenticação servidor-a-servidor e autorização PR/SC/RS no servidor, e limitar os campos transferidos ao necessário para os indicadores. Contatos e telefones de endereços não são necessários para este painel.
+O erro observado em `https://kpi.f4aconsultoria.com.br/` é a própria página estática de indisponibilidade: ela informa que a integração não está configurada e apresenta os indicadores como indisponíveis. Não foi observado erro de JavaScript nem feita chamada ao endpoint do Worker. A causa é a ausência de um fluxo server-side autenticado entre a Vercel e a sessão local exigida pelo Worker, não a ausência de números simulados.
 
-## Requisitos para integração operacional
+## Requisitos externos para habilitar a integração
 
-- Disponibilizar fontes reais com responsável, escopo por UF e timestamp de atualização. Indicar dados desatualizados explicitamente; nunca substituir falhas por valores fictícios.
-- Implementar autenticação e autorização por perfil e UF no servidor. Não conceder acesso com base em nomes ou e-mails encontrados em documentos.
-- Manter endereços e acesso separados de blocos liberados e obra. Distinguir produção de aprovação, medição, faturamento e recebimento.
-- Não calcular FCMD ou ociosidade sem fontes reais validadas.
-- Limitar projeções ao estoque liberado, equipes e agenda disponíveis.
-- Tratar PR, SC e RS como o escopo regional, sem inventar metas, produção, equipes ou outros dados.
+- O responsável pelo Worker deve fornecer e validar um protocolo de autenticação server-to-server ou um fluxo de sessão que possa ser terminado com segurança por um proxy. Não se presume nem se inventa token, segredo, endpoint de login ou compartilhamento de sessão.
+- O responsável pela fonte deve documentar o esquema real da resposta de `/api/dashboard-kpi`, os campos permitidos para o painel, o escopo de autorização PR/SC/RS e o timestamp/validade dos dados. A resposta encaminhada deve conter apenas dados necessários aos KPIs, nunca credenciais ou PII.
+- Com esse contrato, implementar uma função server-side no projeto Vercel para autenticar, validar e filtrar a resposta. Segredos devem ser configurados pelo administrador nos mecanismos protegidos da Vercel, nunca no HTML, no browser, no repositório ou em logs.
+- Confirmar controle de acesso por perfil e UF no servidor. Não confiar em seleções enviadas pelo cliente e não exibir valores de simulação se autenticação, autorização ou leitura falhar.
+- Validar o proxy e o tratamento de sessão/cookies em preview antes de qualquer publicação; se necessário, definir com os responsáveis os domínios, atributos e ciclo de vida dos cookies. Esta tarefa não modifica nem implanta o Worker.
 
 ## Premissas de simulação
 
-Somente para simulações: receita potencial de R$ 1.800 por unidade, valor do parceiro de R$ 900 por unidade, contribuição de R$ 900 por unidade e custo fixo de R$ 20.000 por UF/mês. Essas premissas não representam resultados reais e não alimentam os indicadores da página.
+As premissas de simulação exibidas na página não representam resultados reais e não alimentam os indicadores.
 
 ## Publicação
 
-Esta alteração não configura nem executa deploy. Uma publicação operacional fica bloqueada até que haja integração real de dados, autorização server-side e um fluxo de deploy e validação apropriado. A página estática atual é apenas um estado explícito de indisponibilidade, não um painel operacional pronto para produção.
+Não foi possível concluir a conexão neste repositório sem o protocolo de autenticação e o contrato de resposta mantidos pelo Worker. A PR #2, que apenas adiciona um link para uma rota do Worker, não integra os dados à página Vercel e não atende ao requisito de manter o Worker como fonte e o site KPI como painel. Nenhuma alteração, chamada mutável ou implantação foi feita no Worker; este trabalho também não executa deploy de produção.

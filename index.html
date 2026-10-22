@@ -55,8 +55,8 @@
     </header>
 
     <section class="notice" aria-labelledby="data-status">
-      <h2 id="data-status">Integração de dados não configurada</h2>
-      <p>Este painel não está conectado a fontes operacionais. Nenhum indicador, projeção ou dado de parceiro está disponível; não use esta página para decisões operacionais ou financeiras.</p>
+      <h2 id="data-status">Conexão segura ainda não disponível</h2>
+      <p>A fonte operacional é a rota autenticada <code>GET /api/dashboard-kpi</code> no Worker. Ela exige uma sessão do próprio Worker, enquanto este site é estático e não tem um proxy server-side autenticado. O Worker também não oferece CORS, então o navegador não pode ler sua resposta. Nenhum indicador está disponível nesta página.</p>
     </section>
 
     <section aria-labelledby="regional-sources">
@@ -64,17 +64,17 @@
       <div class="grid">
         <article class="card">
           <h2>Paraná · PR</h2>
-          <p>Não há fonte de dados conectada para este estado.</p>
+          <p>Os dados deste estado não estão disponíveis neste site.</p>
           <span class="state">Dados indisponíveis</span>
         </article>
         <article class="card">
           <h2>Santa Catarina · SC</h2>
-          <p>Não há fonte de dados conectada para este estado.</p>
+          <p>Os dados deste estado não estão disponíveis neste site.</p>
           <span class="state">Dados indisponíveis</span>
         </article>
         <article class="card">
           <h2>Rio Grande do Sul · RS</h2>
-          <p>Não há fonte de dados conectada para este estado.</p>
+          <p>Os dados deste estado não estão disponíveis neste site.</p>
           <span class="state">Dados indisponíveis</span>
         </article>
       </div>
@@ -86,17 +86,17 @@
         <article class="card">
           <p class="metric-label">Endereços e acesso</p>
           <p>Deve ser acompanhado separadamente de blocos liberados e obra.</p>
-          <p class="metric-status">Indisponível · fonte não conectada</p>
+          <p class="metric-status">Indisponível · conexão server-side não configurada</p>
         </article>
         <article class="card">
           <p class="metric-label">Blocos liberados e obra</p>
           <p>Estoque liberado e execução não estão disponíveis para consulta.</p>
-          <p class="metric-status">Indisponível · fonte não conectada</p>
+          <p class="metric-status">Indisponível · conexão server-side não configurada</p>
         </article>
         <article class="card">
           <p class="metric-label">Produção e ciclo financeiro</p>
           <p>Aprovação, medição, faturamento e recebimento são etapas distintas; seus dados não estão conectados.</p>
-          <p class="metric-status">Indisponível · fonte não conectada</p>
+          <p class="metric-status">Indisponível · conexão server-side não configurada</p>
         </article>
         <article class="card">
           <p class="metric-label">FCMD e ociosidade</p>
@@ -122,7 +122,7 @@
     </details>
 
     <footer>
-      Esta página não autentica usuários nem aplica autorização por perfil/UF. Não insira ou conecte dados reais até existir uma API com autenticação e autorização verificadas no servidor.
+      Esta página não autentica usuários nem aplica autorização por perfil/UF. Não insira credenciais aqui. A integração depende de um contrato de autenticação server-side e de uma resposta de KPI validada pela equipe responsável pelo Worker.
     </footer>
   </main>
 </body>
