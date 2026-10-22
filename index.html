@@ -39,6 +39,18 @@
     .details summary { color: #c8d6e2; cursor: pointer; font-weight: 650; }
     .details p { color: #a8bac9; line-height: 1.6; }
     footer { margin-top: 32px; padding-top: 16px; border-top: 1px solid #2a4358; color: #8296a8; font-size: .85rem; line-height: 1.5; }
+    [hidden] { display: none !important; }
+    .auth-form { display: grid; max-width: 420px; gap: 12px; margin-top: 18px; }
+    .auth-form label { display: grid; gap: 6px; color: #d5e3ee; font-size: .9rem; font-weight: 650; }
+    .auth-form input, .toolbar select { min-height: 42px; padding: 9px 11px; border: 1px solid #60788b; border-radius: 7px; background: #071523; color: #e8f4fc; font: inherit; }
+    .button { min-height: 42px; padding: 9px 14px; border: 1px solid #42c8ef; border-radius: 7px; background: #42c8ef; color: #071523; font: inherit; font-weight: 750; cursor: pointer; }
+    .button.secondary { border-color: #60788b; background: transparent; color: #e8f4fc; }
+    .button:focus-visible, input:focus-visible, select:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
+    .toolbar { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .toolbar .section-title { margin: 0 auto 0 0; }
+    .error { min-height: 1.5em; color: #ffaaa5; font-weight: 650; }
+    .metric-value { margin-top: 14px !important; color: #e8f4fc !important; font-size: 1.25rem; font-weight: 750; }
+    .muted { color: #a8bac9 !important; font-size: .85rem; }
 
     @media (max-width: 700px) {
       main { padding-top: 24px; }
@@ -54,76 +66,225 @@
       <p>Escopo previsto: Paraná (PR), Santa Catarina (SC) e Rio Grande do Sul (RS).</p>
     </header>
 
-    <section class="notice" aria-labelledby="data-status">
-      <h2 id="data-status">Conexão segura ainda não disponível</h2>
-      <p>A versão atual do Worker não disponibiliza <code>/api/dashboard-kpi</code>. Os endpoints autenticados atuais de endereços e prumadas exigem sessão própria do Worker; não há uma interface server-to-server documentada para este site. Como esta página é estática e o navegador não pode ler respostas do Worker, nenhum indicador está disponível aqui.</p>
+    <section id="login-panel" class="notice" aria-labelledby="login-title">
+      <h2 id="login-title">Acesso restrito ao Gestor Master</h2>
+      <p>Entre com sua conta do Worker. A autenticação é encaminhada pelo servidor Vercel; a senha e o cookie de sessão não são armazenados no navegador nem incluídos nos dados KPI.</p>
+      <form id="login-form" class="auth-form" method="post" action="/api/auth/login" autocomplete="on">
+        <label for="email">E-mail
+          <input id="email" name="email" type="email" autocomplete="username" maxlength="254" required />
+        </label>
+        <label for="password">Senha
+          <input id="password" name="password" type="password" autocomplete="current-password" maxlength="128" required />
+        </label>
+        <button id="login-button" class="button" type="submit">Entrar</button>
+        <p id="login-error" class="error" role="alert" aria-live="polite"></p>
+      </form>
     </section>
 
-    <section aria-labelledby="regional-sources">
-      <h2 class="section-title" id="regional-sources">Disponibilidade por estado</h2>
-      <div class="grid">
-        <article class="card">
-          <h2>Paraná · PR</h2>
-          <p>Os dados deste estado não estão disponíveis neste site.</p>
-          <span class="state">Dados indisponíveis</span>
-        </article>
-        <article class="card">
-          <h2>Santa Catarina · SC</h2>
-          <p>Os dados deste estado não estão disponíveis neste site.</p>
-          <span class="state">Dados indisponíveis</span>
-        </article>
-        <article class="card">
-          <h2>Rio Grande do Sul · RS</h2>
-          <p>Os dados deste estado não estão disponíveis neste site.</p>
-          <span class="state">Dados indisponíveis</span>
-        </article>
+    <section id="dashboard" hidden aria-labelledby="dashboard-title">
+      <div class="toolbar">
+        <h2 class="section-title" id="dashboard-title">Indicadores por estado</h2>
+        <span id="updated-at" class="muted" role="status"></span>
+        <button id="refresh" class="button secondary" type="button">Atualizar</button>
+        <button id="logout" class="button secondary" type="button">Sair</button>
       </div>
+      <p id="dashboard-error" class="error" role="alert" aria-live="polite"></p>
+      <div id="state-cards" class="grid"></div>
+      <section class="details" aria-labelledby="monthly-title">
+        <h2 class="section-title" id="monthly-title">Metas e produção mensal</h2>
+        <label for="month">Período disponível</label>
+        <select id="month"></select>
+        <div id="monthly-cards" class="metrics"></div>
+      </section>
+      <section class="details" aria-labelledby="source-title">
+        <h2 id="source-title">Rastreabilidade e limites</h2>
+        <p id="source-info" class="muted"></p>
+        <p>FCMD, ociosidade, equipes, agenda, projeções, faturamento e recebimentos não são exibidos sem fontes validadas.</p>
+      </section>
     </section>
-
-    <section aria-labelledby="operational-data">
-      <h2 class="section-title" id="operational-data">Indicadores operacionais</h2>
-      <div class="metrics">
-        <article class="card">
-          <p class="metric-label">Endereços e acesso</p>
-          <p>Deve ser acompanhado separadamente de blocos liberados e obra.</p>
-          <p class="metric-status">Indisponível · conexão server-side não configurada</p>
-        </article>
-        <article class="card">
-          <p class="metric-label">Blocos liberados e obra</p>
-          <p>Estoque liberado e execução não estão disponíveis para consulta.</p>
-          <p class="metric-status">Indisponível · conexão server-side não configurada</p>
-        </article>
-        <article class="card">
-          <p class="metric-label">Produção e ciclo financeiro</p>
-          <p>Aprovação, medição, faturamento e recebimento são etapas distintas; seus dados não estão conectados.</p>
-          <p class="metric-status">Indisponível · conexão server-side não configurada</p>
-        </article>
-        <article class="card">
-          <p class="metric-label">FCMD e ociosidade</p>
-          <p>Indisponíveis até que existam fontes operacionais validadas.</p>
-          <p class="metric-status">Indisponível · sem fonte validada</p>
-        </article>
-        <article class="card">
-          <p class="metric-label">Projeção</p>
-          <p>Não calculada. Uma projeção futura deverá respeitar estoque liberado, equipes e agenda.</p>
-          <p class="metric-status">Indisponível · dados insuficientes</p>
-        </article>
-        <article class="card">
-          <p class="metric-label">Atualização das fontes</p>
-          <p>Não há conexão para verificar a data de atualização ou sinalizar dados desatualizados.</p>
-          <p class="metric-status">Sem timestamp de origem</p>
-        </article>
-      </div>
-    </section>
-
-    <details class="details">
-      <summary>Premissas permitidas somente para simulação</summary>
-      <p>Receita potencial: R$ 1.800 por unidade; parceiro: R$ 900 por unidade; contribuição: R$ 900 por unidade; custo fixo: R$ 20.000 por UF/mês. Esses valores não são realizados, metas ou dados de produção e não são usados para calcular os indicadores exibidos.</p>
-    </details>
 
     <footer>
-      Esta página não autentica usuários nem aplica autorização por perfil/UF. Não insira credenciais aqui. Sem alterações no Worker, não existe hoje uma interface autenticada adequada para o servidor Vercel obter os dados KPI.
+      As solicitações autenticadas são feitas pelo servidor para endereços e prumadas. O browser recebe somente agregados PR/SC/RS, sem identificadores, endereços, contatos ou telefones. A sessão é um cookie HttpOnly, Secure, SameSite=Strict, limitado a este domínio.
     </footer>
   </main>
+  <script>
+    const stateNames = { PR: 'Paraná', SC: 'Santa Catarina', RS: 'Rio Grande do Sul' };
+    const number = value => Number.isSafeInteger(value) ? value.toLocaleString('pt-BR') : '—';
+    const loginPanel = document.getElementById('login-panel');
+    const dashboard = document.getElementById('dashboard');
+    const loginForm = document.getElementById('login-form');
+    const passwordInput = document.getElementById('password');
+    const loginError = document.getElementById('login-error');
+    const dashboardError = document.getElementById('dashboard-error');
+    let snapshot = null;
+
+    function showLogin(message = '') {
+      loginPanel.hidden = false;
+      dashboard.hidden = true;
+      dashboardError.textContent = '';
+      loginError.textContent = message;
+      snapshot = null;
+    }
+
+    function renderSnapshot(data) {
+      if (!Array.isArray(data.states) || !Array.isArray(data.monthly)) {
+        throw new Error('A resposta KPI tem formato inválido.');
+      }
+      snapshot = data;
+      const cards = document.getElementById('state-cards');
+      cards.replaceChildren();
+      for (const state of data.states) {
+        if (!Object.hasOwn(stateNames, state.state)) continue;
+        const card = document.createElement('article');
+        card.className = 'card';
+        const title = document.createElement('h3');
+        title.textContent = `${stateNames[state.state]} · ${state.state}`;
+        card.append(title);
+        for (const [label, value] of [
+          ['Endereços', state.addresses],
+          ['Autorizados', state.authorized],
+          ['Em execução', state.execution],
+          ['Concluídos', state.completed],
+          ['Blocos liberados', state.releasedBlocks],
+        ]) {
+          const metric = document.createElement('p');
+          metric.className = 'metric-value';
+          metric.textContent = `${label}: ${number(value)}`;
+          card.append(metric);
+        }
+        if (state.releasedBlocksMissing > 0) {
+          const missing = document.createElement('p');
+          missing.className = 'muted';
+          missing.textContent = `Blocos sem quantidade informada: ${number(state.releasedBlocksMissing)}`;
+          card.append(missing);
+        }
+        cards.append(card);
+      }
+
+      const monthSelect = document.getElementById('month');
+      const selected = monthSelect.value;
+      monthSelect.replaceChildren();
+      for (const period of data.monthly) {
+        const option = document.createElement('option');
+        option.value = period.month;
+        option.textContent = period.month;
+        monthSelect.append(option);
+      }
+      if (data.monthly.some(period => period.month === selected)) monthSelect.value = selected;
+      renderMonth();
+
+      const extracted = new Date(data.extractedAt);
+      document.getElementById('updated-at').textContent = Number.isNaN(extracted.getTime())
+        ? 'Consulta concluída'
+        : `Consulta: ${extracted.toLocaleString('pt-BR')}`;
+      document.getElementById('source-info').textContent =
+        `Revisões de origem — endereços: ${number(data.revisions?.addresses)}; prumadas: ${number(data.revisions?.prumadas)}. Atualidade da fonte: não verificada. ${data.limitations?.production || ''}`;
+      loginPanel.hidden = true;
+      dashboard.hidden = false;
+      dashboardError.textContent = '';
+    }
+
+    function renderMonth() {
+      const period = snapshot?.monthly.find(item => item.month === document.getElementById('month').value);
+      const cards = document.getElementById('monthly-cards');
+      cards.replaceChildren();
+      if (!period) {
+        const unavailable = document.createElement('p');
+        unavailable.className = 'muted';
+        unavailable.textContent = 'Sem período mensal disponível na fonte.';
+        cards.append(unavailable);
+        return;
+      }
+      for (const state of period.states) {
+        if (!Object.hasOwn(stateNames, state.state)) continue;
+        const card = document.createElement('article');
+        card.className = 'card';
+        const title = document.createElement('h3');
+        title.textContent = `${stateNames[state.state]} · ${state.state}`;
+        const goal = document.createElement('p');
+        goal.textContent = `Meta: ${state.goal === null ? 'Não disponível' : number(state.goal)}`;
+        const actual = document.createElement('p');
+        actual.textContent = `Produção derivada: ${state.actual === null ? 'Não disponível' : number(state.actual)}`;
+        card.append(title, goal, actual);
+        cards.append(card);
+      }
+    }
+
+    async function refresh() {
+      try {
+        const response = await fetch('/api/kpi', {
+          cache: 'no-store',
+          credentials: 'same-origin',
+          headers: { Accept: 'application/json' },
+        });
+        const result = await response.json();
+        if (response.status === 401) {
+          showLogin('Sua sessão expirou. Entre novamente.');
+          return;
+        }
+        if (response.status === 403) {
+          showLogin(result.error || 'Acesso permitido somente ao Gestor Master.');
+          return;
+        }
+        if (!response.ok) throw new Error(result.error || 'Não foi possível consultar os indicadores.');
+        renderSnapshot(result);
+      } catch (error) {
+        if (dashboard.hidden) loginError.textContent = error.message;
+        else dashboardError.textContent = error.message;
+      }
+    }
+
+    loginForm.addEventListener('submit', async event => {
+      event.preventDefault();
+      const button = document.getElementById('login-button');
+      button.disabled = true;
+      loginError.textContent = '';
+      try {
+        const response = await fetch('/api/auth/login', {
+          method: 'POST',
+          credentials: 'same-origin',
+          cache: 'no-store',
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify({
+            email: document.getElementById('email').value,
+            password: passwordInput.value,
+          }),
+        });
+        passwordInput.value = '';
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.error || 'Não foi possível autenticar.');
+        await refresh();
+      } catch (error) {
+        passwordInput.value = '';
+        loginError.textContent = error.message;
+      } finally {
+        button.disabled = false;
+      }
+    });
+
+    document.getElementById('logout').addEventListener('click', async () => {
+      try {
+        const response = await fetch('/api/auth/logout', {
+          method: 'POST',
+          credentials: 'same-origin',
+          cache: 'no-store',
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: '{}',
+        });
+        if (!response.ok) throw new Error('Não foi possível confirmar a saída no Worker.');
+      } catch (error) {
+        showLogin(error.message);
+        return;
+      }
+      showLogin();
+    });
+
+    document.getElementById('refresh').addEventListener('click', refresh);
+    document.getElementById('month').addEventListener('change', renderMonth);
+    refresh();
+    setInterval(() => {
+      if (!document.hidden && !dashboard.hidden) refresh();
+    }, 30000);
+  </script>
 </body>
 </html>

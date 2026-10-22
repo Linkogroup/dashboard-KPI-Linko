@@ -1,29 +1,27 @@
 # KPI F4A — Linko Group | Regional Sul
 
-## Estado atual
+## Integração no Vercel
 
-O repositório contém uma página estática (`index.html`) e uma regra da Vercel que encaminha as rotas para essa página. Não há função server-side/API Vercel, mecanismo de autenticação ou proxy para a fonte de dados. Por isso, o site não consegue buscar nem exibir os indicadores operacionais.
+O painel continua hospedado em `kpi.f4aconsultoria.com.br`; o Worker é somente a fonte de consulta e não é alterado por este projeto. As funções Node em `api/` fazem um proxy server-side para o host fixo do Worker. Não há fetch do browser para `workers.dev`, CORS permissivo, token embutido ou segredo de integração.
 
-O painel permanece sem dados operacionais; valores simulados não são usados como fallback. A página não autentica usuários e não deve receber credenciais ou dados reais no navegador.
+O login envia e-mail e senha por HTTPS ao endpoint same-origin `/api/auth/login`. A função encaminha o corpo somente a `POST /api/auth/login` no Worker, define `Origin` igual à origem fixa do Worker (requisito do login existente), desativa redirects e não registra corpo, senha, resposta da sessão ou cookie. Ela exige o `Set-Cookie` esperado (`__Host-f4a_session`, token hexadecimal de 64 caracteres, `Path=/`, `HttpOnly`, `Secure`, `SameSite=Strict`, validade de 8 horas e sem `Domain`) e o converte em cookie host-only com os mesmos atributos para o domínio KPI.
 
-## Diagnóstico da conexão
+Após login e em cada consulta, o proxy valida a sessão via `GET /api/auth/me` e permite somente `accessProfile === "master"` com `mustChange === false`. Perfil ausente, resposta inesperada ou endpoint indisponível falham fechados; uma sessão recusada não é emitida ao browser. Logout same-origin envia `POST /api/auth/logout` ao Worker e apaga o cookie local. Senhas e tokens não são persistidos em Vercel storage, `localStorage`, HTML ou logs da aplicação.
 
-A versão atual do Worker (`2b2ba564`, conforme informado pela equipe responsável) não disponibiliza `/api/dashboard-kpi`; essa rota existiu somente em uma versão posteriormente revertida. Os endpoints autenticados atualmente disponíveis para endereços e prumadas (`/api/enderecos` e `/api/prumadas`) dependem de uma sessão do próprio Worker. Não há contrato de sessão compartilhada nem interface autenticada server-to-server documentada para a Vercel. Este repositório também não possui backend/proxy que possa obter e manter essa sessão. O navegador não pode ler respostas do Worker por cross-origin, e adicionar somente CORS não resolveria a autenticação.
+O endpoint Vercel `GET /api/kpi` usa uma allowlist fixa para chamar somente `GET /api/enderecos` e `GET /api/prumadas`, sempre com a sessão Worker mantida no cookie HttpOnly do domínio KPI. A função agrega exclusivamente PR/SC/RS e retorna contagens, metas, produção derivada, revisões e limitações. Identificadores, endereços, nomes, contatos, telefones, notas e registros detalhados não são incluídos no JSON do browser. Os dados brutos são processados apenas em memória na função; respostas são `no-store`. A atualização operacional continua submetida às permissões próprias do Worker.
 
-O erro observado em `https://kpi.f4aconsultoria.com.br/` é a própria página estática de indisponibilidade: ela informa que a integração não está configurada e apresenta os indicadores como indisponíveis. Não foi observado erro de JavaScript nem feita chamada aos endpoints do Worker. A causa é que a rota KPI não existe na versão atual e os endpoints existentes não oferecem uma interface de autenticação adequada para um servidor Vercel sem mudança no Worker; não é a ausência de números simulados.
+O login e logout exigem `Origin` exatamente igual ao host KPI autorizado, HTTPS em produção, `Content-Type: application/json` e `Sec-Fetch-Site` same-origin quando presente. A função não habilita CORS. Hosts permitidos são o domínio de produção e os hosts de deployment/produção fornecidos pelo Vercel; localhost só é aceito fora de produção. Upstream usa origem fixa, caminhos allowlisted, timeout e `redirect: manual`.
 
-## Requisitos externos para habilitar a integração
+## Verificação da fonte e limites de implantação
 
-- Sem alteração no Worker, a integração só poderá avançar se já existir ou for disponibilizada fora dele uma interface/gateway aprovada, autenticada server-to-server e com acesso autorizado aos KPIs. Os endpoints atuais de endereços/prumadas usam a sessão própria do Worker e não constituem essa interface. Não se presume nem se inventa token, segredo, endpoint de login ou compartilhamento de sessão.
-- O responsável pela fonte externa deve documentar o esquema real da resposta KPI, os campos permitidos para o painel, o escopo de autorização PR/SC/RS e o timestamp/validade dos dados. A resposta encaminhada deve conter apenas dados necessários aos KPIs, nunca credenciais ou PII.
-- Somente após esse contrato e interface serem disponibilizados, implementar uma função server-side no projeto Vercel para autenticar, validar e filtrar a resposta. Segredos devem ser configurados pelo administrador nos mecanismos protegidos da Vercel, nunca no HTML, no browser, no repositório ou em logs.
-- Confirmar controle de acesso por perfil e UF no servidor. Não confiar em seleções enviadas pelo cliente e não exibir valores de simulação se autenticação, autorização ou leitura falhar.
-- Validar o proxy e o tratamento de sessão/cookies em preview antes de qualquer publicação; se necessário, definir com os responsáveis os domínios, atributos e ciclo de vida dos cookies. Esta tarefa não modifica nem implanta o Worker.
+O código versionado do Worker lido para esta integração contém `POST /api/auth/login`, `GET /api/auth/me`, `POST /api/auth/logout`, `GET /api/enderecos` e `GET /api/prumadas`. O endpoint antigo `/api/dashboard-kpi` **não é chamado** por este projeto. Os GETs públicos sem sessão retornaram 401 para APIs de dados; isso confirma que a camada de autenticação responde, mas não permite verificar sem login se cada rota está ativa no deployment. O hash `2b2ba564` informado pela equipe não foi resolvido como commit no repositório GitHub acessível. Portanto a disponibilidade do `/api/auth/me` e das rotas de dados na versão Cloudflare ativa deve ser confirmada pelo responsável do Worker durante a validação autorizada de preview; qualquer ausência retorna erro, sem dado fictício.
 
-## Premissas de simulação
+O Worker aplica limite por IP e por e-mail no login. Quando o login é encaminhado pelo Vercel, a origem de rede vista pelo Worker é o egress do Vercel e não o IP original do browser; a cota por IP pode ser compartilhada e causar bloqueios entre usuários. Não encaminhamos nem falsificamos `CF-Connecting-IP`. Antes de uma publicação operacional, o administrador deve confirmar se o limite atual é aceitável ou configurar rate limiting na borda Vercel, e verificar que a versão Worker ativa mantém login, sessão `/api/auth/me` e as duas rotas de leitura.
 
-As premissas de simulação exibidas na página não representam resultados reais e não alimentam os indicadores.
+O Worker não oferece autorização por UF para este painel; por segurança, o proxy permite somente Gestor Master e a resposta é filtrada para PR, SC e RS. Produção é derivada dos registros disponíveis e não comprova execução física; atualidade da fonte é não verificada. FCMD, ociosidade, equipes, agenda, projeções, faturamento e recebimentos permanecem indisponíveis. Valores de simulação nunca são usados como fallback.
 
-## Publicação
+## Testes e publicação
 
-Não foi possível concluir a conexão neste repositório: a versão atual do Worker não tem a rota `/api/dashboard-kpi`, e seus endpoints autenticados atuais não oferecem uma interface apropriada para integração server-side Vercel. A PR #2, que apenas adiciona um link para uma rota do Worker, não integra dados à página Vercel. Nenhuma alteração ou chamada foi feita ao Worker; este trabalho também não executa deploy.
+Execute `node --test tests/worker-proxy.test.cjs` para testar origem/CSRF, cookies, redirects, sessão Master fail-closed, allowlist, agregação sem PII e falhas de revisão com respostas simuladas. Os testes não enviam credenciais nem fazem chamadas ao Worker. As verificações de preview do Vercel não equivalem a um login real autorizado.
+
+Esta mudança não altera nem implanta o Worker e não configura credenciais no Vercel. Nenhum merge ou deploy de produção deve ocorrer até a revisão de segurança, confirmação autorizada das rotas na versão Worker ativa, verificação do limite por IP compartilhado e teste de preview por um Gestor Master. Nunca coloque credenciais no chat; a senha é digitada somente no formulário do domínio KPI.
