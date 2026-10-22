@@ -6,6 +6,12 @@ O repositório contém uma página estática (`index.html`) e uma regra da Verce
 
 O painel foi mantido sem dados operacionais até que fontes reais e controles de acesso estejam disponíveis. Números, metas, parceiros, equipes, SLAs e gráficos anteriormente embutidos na página não eram provenientes de uma integração verificável e foram removidos. A página não autentica usuários nem deve receber dados reais.
 
+## Fonte candidata identificada
+
+`Linkogroup/f4a-paineis` contém código para um Worker Cloudflare com D1 e rotas autenticadas de endereços (`/api/enderecos`) e produção (`/api/prumadas`). O repositório informa que a conexão Cloudflare e a integração ainda não estão ativas e que a atualização de login precisa ser instalada e validada. A existência dessas rotas no código não comprova um serviço publicado nem uma fonte operacional disponível.
+
+As rotas usam sessão do próprio aplicativo e a autorização encontrada é por painel; não há contrato de sessão compartilhada, API de leitura para este dashboard ou autorização por UF. Não conectar o navegador diretamente à API nem espelhar suas credenciais. Uma futura integração precisa confirmar a implantação e atualização dos dados de origem, definir autenticação servidor-a-servidor e autorização PR/SC/RS no servidor, e limitar os campos transferidos ao necessário para os indicadores. Contatos e telefones de endereços não são necessários para este painel.
+
 ## Requisitos para integração operacional
 
 - Disponibilizar fontes reais com responsável, escopo por UF e timestamp de atualização. Indicar dados desatualizados explicitamente; nunca substituir falhas por valores fictícios.
