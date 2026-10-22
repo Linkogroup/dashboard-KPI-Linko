@@ -288,6 +288,7 @@ test('dashboard markup and client logic preserve accessible labels, mobile layou
   assert.match(html, /id="attainment-chart"/);
   assert.match(html, /id="attainment-table"/);
   assert.match(html, /Atingimento histórico da meta cadastrada/);
+  assert.match(html, /Linha tracejada marca 100% da meta/);
   assert.match(html, /id="export-csv"/);
   assert.match(html, /Projeção operacional: indisponível/);
   assert.match(html, /aria-live="polite"/);
